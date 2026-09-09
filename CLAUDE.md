@@ -1,0 +1,2 @@
+@AGENTS.md
+@DEVELOPMENT_PLAN.md

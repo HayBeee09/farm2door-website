@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand Core Swatches */
+  --color-phthalo: #0D2E1C;
+  --color-phthalo-950: #06170D;
+  --color-phthalo-900: #0D2E1C;
+  --color-phthalo-800: #134229;
+  --color-phthalo-700: #1B5A38;
+  --color-phthalo-600: #25784B;
+  --color-phthalo-500: #319760;
+  --color-phthalo-100: #E4F1E9;
+  --color-phthalo-50: #F1F7F3;
+
+  /* Accent Greens */
+  --color-pear: #CFE73B;
+  --color-pear-hover: #BBD428;
+  --color-pear-light: #E7F384;
+  --color-pear-tint: #F5FBE0;
+
+  --color-asparagus: #6A9B48;
+  --color-asparagus-hover: #568137;
+  --color-asparagus-light: #87B566;
+  --color-asparagus-tint: #EAF3E4;
+
+  --color-acid: #B5BA3E;
+  --color-acid-hover: #9FA42E;
+  --color-acid-light: #CDD15E;
+  --color-acid-tint: #F6F7DC;
+
+  /* Organic Cream Palette */
+  --color-cream-50: #FFFDF9;
+  --color-cream-100: #FAF8F2;
+  --color-cream-200: #F3ECE0;
+  --color-cream-300: #E5DBC7;
+  --color-cream-400: #D3C5AA;
+  --color-cream-500: #B8A686;
+  --color-cream-gold: #F7E9BC;
+  --color-cream-gold-hover: #EED794;
+
+  /* Semantic Typography & Surfaces */
+  --color-surface-cream: #FAF8F2;
+  --color-surface-card: #FFFDF9;
+  --color-surface-muted: #F2ECE0;
+  --color-border-cream: #E5DBC7;
+  --color-text-primary: #0D2E1C;
+  --color-text-secondary: #47584E;
+  --color-text-muted: #6E7E74;
+}
+
+:root {
+  --background: #FAF8F2;
+  --foreground: #0D2E1C;
+  
+  /* Palette Direct References */
+  --phthalo: #0D2E1C;
+  --phthalo-rgb: 13, 46, 28;
+  --pear: #CFE73B;
+  --pear-rgb: 207, 231, 59;
+  --asparagus: #6A9B48;
+  --asparagus-rgb: 106, 155, 72;
+  --acid: #B5BA3E;
+  --acid-rgb: 181, 186, 62;
+  
+  /* Cream Scale */
+  --cream-canvas: #FAF8F2;
+  --cream-surface: #FFFDF9;
+  --cream-subtle: #F3ECE0;
+  --cream-border: #E5DBC7;
+  --cream-gold: #F7E9BC;
+  
+  /* Dark / Contrast values */
+  --ink: #07170D;
+  --muted-text: #506155;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar for smooth marketplace browsing */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F3ECE0;
+}
+::-webkit-scrollbar-thumb {
+  background: #6A9B48;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0D2E1C;
+}
+
+/* Subtle Organic Glow and Elevation */
+.shadow-cream-subtle {
+  box-shadow: 0 4px 20px -2px rgba(13, 46, 28, 0.05), 0 2px 6px -1px rgba(13, 46, 28, 0.03);
+}
+
+.shadow-cream-card {
+  box-shadow: 0 10px 30px -4px rgba(13, 46, 28, 0.08), 0 4px 12px -2px rgba(13, 46, 28, 0.04);
+}
+
+.shadow-phthalo-glow {
+  box-shadow: 0 12px 36px -4px rgba(13, 46, 28, 0.25), 0 4px 12px -2px rgba(207, 231, 59, 0.2);
+}

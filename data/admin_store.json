@@ -1,0 +1,206 @@
+{
+  "farmers": [
+    {
+      "id": "f-1",
+      "fullName": "Babatunde Agbaje",
+      "email": "babatunde@farm2door.ng",
+      "phone": "08034567890",
+      "farmName": "Babatunde Agro-Allied Enterprises",
+      "farmLocation": "Ikere-Ekiti South Farmlands",
+      "lga": "Ikere LGA",
+      "coordinates": "7.4982° N, 5.2307° E",
+      "produceTypes": [
+        "Ekiti New White Yam",
+        "Fresh Scotch Bonnet (Rodo)"
+      ],
+      "verificationStatus": "verified",
+      "verifiedAt": "2026-09-07T17:57:10.941Z",
+      "totalListings": 4,
+      "totalRevenueNgn": 145000,
+      "bankDetails": {
+        "bankName": "First Bank of Nigeria",
+        "accountNumber": "3098124451",
+        "accountName": "Babatunde Agbaje Agro",
+        "bankCode": "011",
+        "isVerified": true,
+        "updatedAt": "2026-09-08T15:04:43.774Z"
+      }
+    },
+    {
+      "id": "f-2",
+      "fullName": "Grace Agboola",
+      "email": "grace@farm2door.ng",
+      "phone": "08051234567",
+      "farmName": "Agboola Organic Greenhouses",
+      "farmLocation": "Ado-Ekiti (Iworoko Farming Corridor)",
+      "lga": "Ado LGA",
+      "coordinates": "7.6211° N, 5.2215° E",
+      "produceTypes": [
+        "Tender Fluted Pumpkin (Ugwu)",
+        "Crisp Waterleaf (Gbure)"
+      ],
+      "verificationStatus": "verified",
+      "verifiedAt": "2026-08-20T11:30:00Z",
+      "totalListings": 3,
+      "totalRevenueNgn": 82000,
+      "bankDetails": {
+        "bankName": "Access Bank",
+        "accountNumber": "0691234567",
+        "accountName": "Grace Agboola Organic",
+        "bankCode": "044",
+        "isVerified": true,
+        "updatedAt": "2026-08-20T11:30:00Z"
+      }
+    },
+    {
+      "id": "f-3",
+      "fullName": "Igbemo Rice Millers Co-operative",
+      "email": "igbemo.coop@farm2door.ng",
+      "phone": "08029876543",
+      "farmName": "Igbemo Millers Agrarian Cluster",
+      "farmLocation": "Igbemo-Ekiti",
+      "lga": "Irepodun/Ifelodun LGA",
+      "coordinates": "7.6954° N, 5.3789° E",
+      "produceTypes": [
+        "Stone-Free Igbemo Ofada Rice"
+      ],
+      "verificationStatus": "verified",
+      "verifiedAt": "2026-08-10T14:15:00Z",
+      "totalListings": 2,
+      "totalRevenueNgn": 480000,
+      "bankDetails": {
+        "bankName": "Zenith Bank",
+        "accountNumber": "1012345678",
+        "accountName": "Igbemo Rice Millers Co-operative",
+        "bankCode": "057",
+        "isVerified": true,
+        "updatedAt": "2026-08-10T14:15:00Z"
+      }
+    },
+    {
+      "id": "f-4",
+      "fullName": "Dr. Femi Olubodun",
+      "email": "femi.olubodun@ekitiagro.ng",
+      "phone": "08076543210",
+      "farmName": "Ekiti Commercial Agro Plantation",
+      "farmLocation": "Ikere Agricultural Corridor, Ikere-Ekiti",
+      "lga": "Ikere LGA",
+      "coordinates": "7.5140° N, 5.2390° E",
+      "produceTypes": [
+        "Sweet Valencia Farm Oranges",
+        "Brown Honey Beans (Oloyin)"
+      ],
+      "verificationStatus": "verified",
+      "verifiedAt": "2026-08-01T08:00:00Z",
+      "totalListings": 5,
+      "totalRevenueNgn": 210000,
+      "bankDetails": {
+        "bankName": "Guaranty Trust Bank (GTBank)",
+        "accountNumber": "0123456789",
+        "accountName": "Dr. Femi Olubodun Farms",
+        "bankCode": "058",
+        "isVerified": true,
+        "updatedAt": "2026-08-01T08:00:00Z"
+      }
+    },
+    {
+      "id": "f-5",
+      "fullName": "Adeleke Farmstead",
+      "email": "adeleke.farmstead@gmail.com",
+      "phone": "08061122334",
+      "farmName": "Adeleke Horticultural Farmstead",
+      "farmLocation": "Ilawe-Ekiti (Banana & Pepper Belt)",
+      "lga": "Ekiti South-West LGA",
+      "coordinates": "7.5980° N, 5.1270° E",
+      "produceTypes": [
+        "Aromatic Red Bell Peppers (Tatase)"
+      ],
+      "verificationStatus": "pending_audit",
+      "totalListings": 1,
+      "totalRevenueNgn": 38400,
+      "bankDetails": {
+        "bankName": "United Bank for Africa (UBA)",
+        "accountNumber": "2012345678",
+        "accountName": "Adeleke Horticultural Farmstead",
+        "bankCode": "033",
+        "isVerified": true,
+        "updatedAt": "2026-08-12T10:00:00Z"
+      }
+    }
+  ],
+  "disputes": [
+    {
+      "id": "disp-1788872570024",
+      "orderReference": "FD-TEST-1788872568944",
+      "cropName": "Crisp Waterleaf (Gbure)",
+      "buyerName": "Test Buyer",
+      "farmerName": "Grace Agboola",
+      "type": "perishable_decay",
+      "status": "resolved",
+      "reportedAt": "2026-09-08T13:02:50.024Z",
+      "description": "3 bundles of waterleaf arrived severely wilted due to midday heat on transit.",
+      "resolutionNotes": "Authorized replacement bundle dispatched from fresh morning harvest.",
+      "resolvedAt": "2026-09-08T13:02:50.331Z"
+    },
+    {
+      "id": "disp-1788872414218",
+      "orderReference": "FD-TEST-1788872412908",
+      "cropName": "Crisp Waterleaf (Gbure)",
+      "buyerName": "Test Buyer",
+      "farmerName": "Grace Agboola",
+      "type": "perishable_decay",
+      "status": "resolved",
+      "reportedAt": "2026-09-08T13:00:14.218Z",
+      "description": "3 bundles of waterleaf arrived severely wilted due to midday heat on transit.",
+      "resolutionNotes": "Authorized replacement bundle dispatched from fresh morning harvest.",
+      "resolvedAt": "2026-09-08T13:00:14.598Z"
+    },
+    {
+      "id": "disp-1",
+      "orderReference": "FD-20260905-X71A9B",
+      "cropName": "Crisp Waterleaf (Gbure)",
+      "buyerName": "Mrs. Folashade Adeyeye",
+      "farmerName": "Grace Agboola",
+      "type": "perishable_decay",
+      "status": "resolved",
+      "reportedAt": "2026-09-05T16:30:00Z",
+      "description": "Leaves arrived slightly bruised due to heavy rains on the Iworoko road transit.",
+      "resolutionNotes": "Dispatched free replacement bundle from morning harvest with insulated transit packaging.",
+      "resolvedAt": "2026-09-06T08:00:00Z"
+    },
+    {
+      "id": "disp-2",
+      "orderReference": "FD-20260906-K89C2Z",
+      "cropName": "Ekiti New White Yam",
+      "buyerName": "Chief Oluwole Babalola",
+      "farmerName": "Babatunde Agbaje",
+      "type": "transit_delay",
+      "status": "resolved",
+      "reportedAt": "2026-09-06T19:45:00Z",
+      "description": "Fulfillment delayed 2 hours due to local rural transport logistics along Ikere-Ado route.",
+      "resolutionNotes": "Inspected transit route; approved emergency replacement dispatch with insulated crates.",
+      "resolvedAt": "2026-09-07T17:57:12.419Z"
+    }
+  ],
+  "releasedEscrowRefs": [
+    "FD-20260907-QEPYT0"
+  ],
+  "customFarmerBanks": {
+    "11111111-1111-1111-1111-111111111111": {
+      "bankName": "First Bank of Nigeria",
+      "accountNumber": "3098124451",
+      "accountName": "Babatunde Agbaje Agro",
+      "bankCode": "011",
+      "isVerified": true,
+      "updatedAt": "2026-09-08T15:04:43.774Z"
+    },
+    "f-1": {
+      "bankName": "First Bank of Nigeria",
+      "accountNumber": "3098124451",
+      "accountName": "Babatunde Agbaje Agro",
+      "bankCode": "011",
+      "isVerified": true,
+      "updatedAt": "2026-09-08T15:04:43.774Z"
+    }
+  }
+}

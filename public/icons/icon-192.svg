@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <rect width="192" height="192" fill="#0D2E1C" rx="36"/>
+  <!-- Soil / Furrows -->
+  <path d="M36 142 C66 136, 126 136, 156 142" stroke="#6A9B48" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <path d="M48 156 C74 152, 118 152, 144 156" stroke="#2B5436" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <!-- Central Sprout Stem -->
+  <path d="M96 140 L96 76" stroke="#CFE73B" stroke-width="8" stroke-linecap="round"/>
+  <!-- Left Leaf -->
+  <path d="M96 102 C70 96, 56 68, 62 46 C82 50, 96 74, 96 102 Z" fill="#CFE73B"/>
+  <!-- Right Leaf -->
+  <path d="M96 82 C118 78, 134 56, 130 38 C112 40, 96 60, 96 82 Z" fill="#6A9B48"/>
+  <!-- Sun / Dawn Accent -->
+  <circle cx="140" cy="52" r="10" fill="#CFE73B" opacity="0.9"/>
+</svg>
