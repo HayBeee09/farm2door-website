@@ -4,20 +4,34 @@ import { createServerSupabase } from "@/utils/supabase/server";
 export async function GET() {
   try {
     const supabase = await createServerSupabase();
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    let user = null;
+    try {
+      const { data, error } = await supabase.auth.getUser();
+      if (!error && data?.user) {
+        user = data.user;
+      }
+    } catch {
+      // Supabase network unreachable or session absent
+    }
 
-    if (userError || !user) {
+    if (!user) {
       return NextResponse.json(
         { authenticated: false, user: null },
-        { status: 401 }
+        { status: 200 }
       );
     }
 
-    const { data: profile } = await supabase
-      .from("users")
-      .select("id, full_name, email, phone, role, farm_name, farm_location, address, is_verified")
-      .eq("id", user.id)
-      .maybeSingle();
+    let profile = null;
+    try {
+      const { data } = await supabase
+        .from("users")
+        .select("id, full_name, email, phone, role, farm_name, farm_location, address, is_verified")
+        .eq("id", user.id)
+        .maybeSingle();
+      profile = data;
+    } catch {
+      // Ignore database query error on offline mode
+    }
 
     const userPayload = profile || {
       id: user.id,
@@ -35,8 +49,7 @@ export async function GET() {
       authenticated: true,
       user: userPayload,
     });
-  } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : "Internal server error fetching user session";
-    return NextResponse.json({ error: errorMsg }, { status: 500 });
+  } catch {
+    return NextResponse.json({ authenticated: false, user: null }, { status: 200 });
   }
 }
