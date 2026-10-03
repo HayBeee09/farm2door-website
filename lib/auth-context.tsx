@@ -34,7 +34,7 @@ interface AuthContextType {
   isAuthModalOpen: boolean;
   authModalMode: "login" | "register";
   authModalDefaultRole: "buyer" | "farmer";
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; user?: AuthUser }>;
   register: (payload: RegisterPayload) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   openAuthModal: (mode?: "login" | "register", role?: "buyer" | "farmer") => void;
@@ -114,7 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setUser(data.user);
       setIsAuthModalOpen(false);
-      return { success: true };
+      return { success: true, user: data.user };
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Network error during login";
       return { success: false, error: msg };

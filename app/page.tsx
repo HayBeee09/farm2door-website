@@ -211,6 +211,23 @@ export default function Home() {
   const [activePersonaTab, setActivePersonaTab] = useState<"buyer" | "farmer" | "admin">("buyer");
   const { user, isAuthenticated, openAuthModal, logout } = useAuth();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
+  const [routeNotice, setRouteNotice] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const notice = params.get("notice");
+      const auth = params.get("auth");
+      if (notice === "farmer_only") {
+        setRouteNotice("Notice: The Producer Dashboard is reserved for verified Ekiti farmers.");
+      } else if (notice === "admin_only") {
+        setRouteNotice("Notice: Platform Administration Console requires authorized administrator credentials.");
+      }
+      if (auth === "login") {
+        openAuthModal("login");
+      }
+    }
+  }, [openAuthModal]);
 
   // 1. Fetch live categories with active product counts on mount
   useEffect(() => {
@@ -435,7 +452,15 @@ export default function Home() {
                     <span className="hidden sm:inline-block max-w-[100px] truncate">
                       {user?.full_name?.split(" ")[0]}
                     </span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#CFE73B]/20 text-[#CFE73B] font-mono capitalize">
+                    <span
+                      className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${
+                        user?.role === "admin"
+                          ? "bg-[#CFE73B] text-[#0D2E1C]"
+                          : user?.role === "farmer"
+                          ? "bg-[#6A9B48]/30 text-[#CFE73B]"
+                          : "bg-white/20 text-white"
+                      }`}
+                    >
                       {user?.role}
                     </span>
                     <svg className="w-3 h-3 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -444,36 +469,75 @@ export default function Home() {
                   </button>
 
                   {isUserMenuOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl bg-[#FFFDF9] text-[#0D2E1C] border border-[#E5DBC7] shadow-xl py-2 z-50">
+                    <div className="absolute right-0 top-full mt-2 w-60 rounded-2xl bg-[#FFFDF9] text-[#0D2E1C] border border-[#E5DBC7] shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-100">
                       <div className="px-4 py-2 border-b border-[#E5DBC7]">
                         <p className="text-xs font-bold text-[#0D2E1C] truncate">{user?.full_name}</p>
                         <p className="text-[11px] text-[#4F6A52] truncate">{user?.email}</p>
-                        {user?.farm_name && (
+                        {user?.role === "farmer" && user?.farm_name && (
                           <p className="text-[10px] text-[#6A9B48] font-semibold mt-0.5">🌱 {user.farm_name}</p>
                         )}
+                        {user?.role === "admin" && (
+                          <span className="inline-block mt-1 text-[10px] px-2 py-0.5 rounded bg-[#CFE73B] text-[#0D2E1C] font-black uppercase tracking-wider">
+                            Platform Administrator
+                          </span>
+                        )}
+                        {user?.role === "buyer" && (
+                          <span className="inline-block mt-1 text-[10px] px-2 py-0.5 rounded bg-[#F2ECE0] text-[#4F6A52] font-semibold">
+                            Household / Retail Buyer
+                          </span>
+                        )}
                       </div>
+
+                      {/* 1. Farmer Only: Farmer Dashboard */}
                       {user?.role === "farmer" && (
-                        <a
+                        <Link
                           href="/dashboard/farmer"
-                          className="block px-4 py-2 text-xs font-semibold hover:bg-[#F2ECE0] text-[#0D2E1C]"
+                          className="block px-4 py-2.5 text-xs font-bold text-[#0D2E1C] hover:bg-[#F2ECE0] transition-colors"
+                          onClick={() => setIsUserMenuOpen(false)}
                         >
                           🚜 Farmer Dashboard
-                        </a>
+                        </Link>
                       )}
-                      <Link
-                        href="/orders"
-                        className="block px-4 py-2 text-xs font-semibold hover:bg-[#F2ECE0] text-[#0D2E1C]"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        📦 My Orders & Deliveries
-                      </Link>
-                      <Link
-                        href="/dashboard/admin"
-                        className="block px-4 py-2 text-xs font-semibold hover:bg-[#F2ECE0] text-[#0D2E1C]"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        🏛️ Platform Admin & Escrow
-                      </Link>
+
+                      {/* 2. Buyer Only: My Orders & Deliveries */}
+                      {user?.role === "buyer" && (
+                        <Link
+                          href="/orders"
+                          className="block px-4 py-2.5 text-xs font-bold text-[#0D2E1C] hover:bg-[#F2ECE0] transition-colors"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          📦 My Orders & Deliveries
+                        </Link>
+                      )}
+
+                      {/* 3. Admin Only: Admin Portal and Oversight Consoles */}
+                      {user?.role === "admin" && (
+                        <>
+                          <Link
+                            href="/dashboard/admin"
+                            className="block px-4 py-2.5 text-xs font-black text-[#0D2E1C] bg-[#CFE73B]/25 hover:bg-[#CFE73B]/45 transition-colors border-y border-[#CFE73B]/40"
+                            onClick={() => setIsUserMenuOpen(false)}
+                          >
+                            🏛️ Platform Admin & Escrow Desk
+                          </Link>
+                          <Link
+                            href="/dashboard/farmer"
+                            className="block px-4 py-2 text-xs font-semibold hover:bg-[#F2ECE0] text-[#0D2E1C]"
+                            onClick={() => setIsUserMenuOpen(false)}
+                          >
+                            🚜 Farmer Overview Console
+                          </Link>
+                          <Link
+                            href="/orders"
+                            className="block px-4 py-2 text-xs font-semibold hover:bg-[#F2ECE0] text-[#0D2E1C]"
+                            onClick={() => setIsUserMenuOpen(false)}
+                          >
+                            📦 Orders Audit Console
+                          </Link>
+                        </>
+                      )}
+
+                      {/* Profile & Settings (Accessible to all roles) */}
                       <Link
                         href="/profile"
                         className="block px-4 py-2 text-xs font-semibold hover:bg-[#F2ECE0] text-[#0D2E1C]"
@@ -481,6 +545,7 @@ export default function Home() {
                       >
                         ⚙️ Profile & Settings
                       </Link>
+
                       <button
                         onClick={() => {
                           logout();
@@ -506,6 +571,24 @@ export default function Home() {
             </div>
           </div>
         </header>
+
+        {/* Floating Route Notice Banner */}
+        {routeNotice && (
+          <div className="relative z-30 max-w-4xl mx-auto mt-4 px-4">
+            <div className="p-3.5 bg-[#0D2E1C]/95 border border-[#CFE73B] text-[#FAF8F2] rounded-2xl flex items-center justify-between text-xs font-semibold shadow-xl backdrop-blur-md">
+              <div className="flex items-center gap-2.5">
+                <span className="text-base text-[#CFE73B]">ℹ️</span>
+                <span>{routeNotice}</span>
+              </div>
+              <button
+                onClick={() => setRouteNotice(null)}
+                className="text-white/70 hover:text-[#CFE73B] text-xs font-bold px-2 py-1 cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* --- HERO CONTENT SECTION --- */}
         <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-28 text-center">
@@ -1545,7 +1628,15 @@ export default function Home() {
             <div>
               © 2026 Farm2Door. Approved for Implementation.
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-wrap items-center gap-4">
+              <Link
+                href="/dashboard/admin"
+                className="text-[#CFE73B] hover:underline font-bold flex items-center gap-1.5 transition-colors"
+              >
+                <span>🏛️</span>
+                <span>Platform Admin Desk</span>
+              </Link>
+              <span>•</span>
               <span>Privacy Policy</span>
               <span>•</span>
               <span>Terms of Escrow</span>

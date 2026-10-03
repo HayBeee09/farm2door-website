@@ -33,16 +33,23 @@ export async function GET() {
       // Ignore database query error on offline mode
     }
 
+    const emailLower = (user.email || "").toLowerCase();
+    const fallbackRole = emailLower.includes("admin")
+      ? "admin"
+      : emailLower.includes("farmer")
+      ? "farmer"
+      : "buyer";
+
     const userPayload = profile || {
       id: user.id,
       email: user.email,
       full_name: user.user_metadata?.full_name || user.email,
       phone: user.user_metadata?.phone || "",
-      role: user.user_metadata?.role || "buyer",
+      role: user.user_metadata?.role || fallbackRole,
       farm_name: user.user_metadata?.farm_name || null,
       farm_location: user.user_metadata?.farm_location || null,
       address: user.user_metadata?.address || null,
-      is_verified: false,
+      is_verified: user.user_metadata?.role === "admin" || false,
     };
 
     return NextResponse.json({

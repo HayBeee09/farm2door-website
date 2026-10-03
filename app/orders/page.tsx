@@ -108,9 +108,29 @@ export default function BuyerOrdersPage() {
 
           <div className="flex items-center space-x-3">
             {isAuthenticated ? (
-              <span className="text-xs text-[#FAF8F2] font-semibold bg-[#1B3B22] px-3 py-1.5 rounded-full border border-[#2B5436]">
-                👤 {user?.full_name?.split(" ")[0]} ({user?.role})
-              </span>
+              <>
+                {user?.role === "farmer" && (
+                  <Link
+                    href="/dashboard/farmer"
+                    className="text-xs text-[#0D2E1C] bg-[#CFE73B] hover:bg-[#BBD428] px-3 py-1.5 rounded-full font-bold transition-colors flex items-center gap-1"
+                  >
+                    <span>🚜</span>
+                    <span>Farmer Dashboard</span>
+                  </Link>
+                )}
+                {user?.role === "admin" && (
+                  <Link
+                    href="/dashboard/admin"
+                    className="text-xs text-[#0D2E1C] bg-[#CFE73B] hover:bg-[#BBD428] px-3 py-1.5 rounded-full font-bold transition-colors flex items-center gap-1"
+                  >
+                    <span>🏛️</span>
+                    <span>Admin Console</span>
+                  </Link>
+                )}
+                <span className="text-xs text-[#FAF8F2] font-semibold bg-[#1B3B22] px-3 py-1.5 rounded-full border border-[#2B5436]">
+                  👤 {user?.full_name?.split(" ")[0]} ({user?.role})
+                </span>
+              </>
             ) : (
               <button
                 onClick={() => openAuthModal("login")}
@@ -125,6 +145,27 @@ export default function BuyerOrdersPage() {
 
       {/* Main Container */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        {/* Farmer Account Redirect Notice */}
+        {user?.role === "farmer" && (
+          <div className="mb-6 p-5 rounded-2xl bg-[#0D2E1C] text-[#FAF8F2] border-2 border-[#CFE73B] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg animate-in fade-in">
+            <div className="flex items-start sm:items-center gap-3">
+              <span className="text-2xl">🌱</span>
+              <div>
+                <h3 className="text-sm font-bold text-[#CFE73B]">You are signed in as an Ekiti Farmer</h3>
+                <p className="text-xs text-white/80 mt-0.5">
+                  This page tracks retail household purchases. Inbound orders from buyers for your produce and dispatch operations are managed in your dedicated Farmer Dashboard.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/dashboard/farmer"
+              className="px-4 py-2 bg-[#CFE73B] hover:bg-[#BBD428] text-[#0D2E1C] font-black text-xs rounded-xl transition-colors whitespace-nowrap self-start sm:self-auto"
+            >
+              🚜 Open Farmer Dashboard →
+            </Link>
+          </div>
+        )}
+
         {/* Title & Summary */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

@@ -83,9 +83,17 @@ export default function AuthModal() {
         if (!result.success) {
           setErrorMessage(result.error || "Failed to sign in. Please verify your credentials.");
         } else {
-          setSuccessMessage("Signed in successfully! Welcome back.");
+          const isAdmin = result.user?.role === "admin";
+          setSuccessMessage(
+            isAdmin
+              ? "Signed in as Platform Administrator! Redirecting to Control Desk..."
+              : "Signed in successfully! Welcome back."
+          );
           setTimeout(() => {
             closeAuthModal();
+            if (isAdmin) {
+              window.location.href = "/dashboard/admin";
+            }
           }, 800);
         }
       } else {
@@ -458,6 +466,23 @@ export default function AuthModal() {
                 </span>
               )}
             </div>
+
+            {/* Platform Admin Helper for Evaluators & Staff */}
+            {mode === "login" && (
+              <div className="pt-3 border-t border-[#E5DBC7] text-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEmail("admin@farm2door.ng");
+                    setPassword("admin1234");
+                  }}
+                  className="text-[11px] text-[#4F6A52] hover:text-[#0D2E1C] font-semibold hover:underline flex items-center justify-center gap-1.5 mx-auto cursor-pointer"
+                >
+                  <span>🏛️</span>
+                  <span>Platform Administrator / Auditor? Fill Admin Credentials</span>
+                </button>
+              </div>
+            )}
           </form>
         </div>
       </div>

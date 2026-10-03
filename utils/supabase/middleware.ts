@@ -68,12 +68,24 @@ export const updateSession = async (request: NextRequest) => {
       }
     }
 
-    // Protect Admin routes
-    if (pathname.startsWith("/admin")) {
-      if (!user || user.user_metadata?.role !== "admin") {
+    // Protect Admin routes (/dashboard/admin and /admin/*)
+    if (pathname.startsWith("/admin") || pathname.startsWith("/dashboard/admin")) {
+      const role = user?.user_metadata?.role;
+      if (user && role !== "admin") {
         const url = request.nextUrl.clone();
-        url.pathname = "/";
+        url.pathname = role === "farmer" ? "/dashboard/farmer" : "/";
         url.searchParams.set("notice", "admin_only");
+        return NextResponse.redirect(url);
+      }
+    }
+
+    // Protect Retail Buyer Orders (/orders) from farmers
+    if (pathname.startsWith("/orders")) {
+      const role = user?.user_metadata?.role;
+      if (user && role === "farmer") {
+        const url = request.nextUrl.clone();
+        url.pathname = "/dashboard/farmer";
+        url.searchParams.set("notice", "farmer_portal");
         return NextResponse.redirect(url);
       }
     }

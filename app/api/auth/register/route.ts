@@ -78,6 +78,7 @@ export async function POST(request: NextRequest) {
     } catch (dbErr) {
       console.warn("Direct public.users sync notice (trigger may handle):", dbErr);
     }
+  }
 
     const cleanUser = {
       id: authData?.user?.id || `usr_${Buffer.from(email).toString("hex").slice(0, 10)}`,

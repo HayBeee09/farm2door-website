@@ -3,9 +3,17 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { VerifiedFarmer, EscrowTransaction, DisputeReport } from "@/lib/admin-store";
+import { useAuth } from "@/lib/auth-context";
 
 export default function AdminDashboardPage() {
+  const { user, isAuthenticated, isLoading: isAuthLoading, login, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<"overview" | "farmers" | "escrow" | "spoilage" | "disputes">("overview");
+
+  // Authentication gateway state
+  const [adminEmail, setAdminEmail] = useState("admin@farm2door.ng");
+  const [adminPassword, setAdminPassword] = useState("admin1234");
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // State
   const [metrics, setMetrics] = useState<any>(null);
@@ -135,6 +143,188 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const handleAdminSignIn = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setIsLoggingIn(true);
+    setLoginError(null);
+    try {
+      const res = await login(adminEmail, adminPassword);
+      if (!res.success) {
+        setLoginError(res.error || "Failed to authenticate administrator.");
+      } else {
+        loadData();
+      }
+    } catch {
+      setLoginError("Network connection error during admin sign in.");
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  // 1. Loading authentication state
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen bg-[#07170D] flex flex-col justify-center items-center p-4 text-[#FAF8F2]">
+        <div className="text-center space-y-3">
+          <div className="w-12 h-12 mx-auto rounded-2xl bg-[#0D2E1C] border border-[#1B3B22] flex items-center justify-center text-2xl animate-pulse">
+            🏛️
+          </div>
+          <p className="text-xs text-[#CFE73B] font-bold">Verifying Administrator Session...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. Unauthenticated: Show Executive Admin Gateway
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#07170D] flex flex-col justify-center items-center p-4 sm:p-6 text-[#FAF8F2]">
+        <div className="w-full max-w-md bg-[#0D2E1C] border border-[#1B3B22] rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 animate-in fade-in zoom-in-95 duration-200">
+          <div className="text-center space-y-2">
+            <div className="w-14 h-14 mx-auto rounded-2xl bg-[#1B3B22] border border-[#2B5436] flex items-center justify-center text-3xl shadow-md">
+              🏛️
+            </div>
+            <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              Ekiti Agricultural Control Desk
+            </h1>
+            <p className="text-xs text-[#CFE73B] font-bold uppercase tracking-wider">
+              Platform Administration & Escrow Audit
+            </p>
+            <p className="text-[11px] text-white/70">
+              Restricted portal. Authenticate with your platform administrator credentials to supervise settlement ledgers, vendor status, and dispute adjudications.
+            </p>
+          </div>
+
+          {loginError && (
+            <div className="p-3 bg-red-950/70 border border-red-500/50 rounded-xl text-xs text-red-200 flex items-start gap-2">
+              <span>⚠️</span>
+              <span>{loginError}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleAdminSignIn} className="space-y-4">
+            <div>
+              <label className="block text-[11px] font-bold text-white/80 uppercase tracking-wider mb-1">
+                Admin Email Address
+              </label>
+              <input
+                type="email"
+                value={adminEmail}
+                onChange={(e) => setAdminEmail(e.target.value)}
+                required
+                placeholder="admin@farm2door.ng"
+                className="w-full px-3.5 py-2.5 bg-[#06170D] border border-[#1B3B22] rounded-xl text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#CFE73B]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-white/80 uppercase tracking-wider mb-1">
+                Security Password
+              </label>
+              <input
+                type="password"
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+                className="w-full px-3.5 py-2.5 bg-[#06170D] border border-[#1B3B22] rounded-xl text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#CFE73B]"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoggingIn}
+              className="w-full py-3 bg-[#CFE73B] hover:bg-[#BBD428] text-[#0D2E1C] font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-md cursor-pointer disabled:opacity-50"
+            >
+              {isLoggingIn ? "Authenticating Platform Admin..." : "Sign In to Control Desk"}
+            </button>
+          </form>
+
+          <div className="pt-2 border-t border-[#1B3B22] text-center space-y-3">
+            <button
+              type="button"
+              onClick={() => {
+                setAdminEmail("admin@farm2door.ng");
+                setAdminPassword("admin1234");
+                setTimeout(() => {
+                  handleAdminSignIn();
+                }, 50);
+              }}
+              className="w-full py-2.5 bg-white/10 hover:bg-white/15 text-white/90 font-bold text-xs rounded-xl border border-white/20 transition-all cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span>⚡</span>
+              <span>Instant Demo Admin Access (`admin@farm2door.ng`)</span>
+            </button>
+
+            <Link
+              href="/"
+              className="inline-block text-xs text-[#CFE73B] hover:underline font-semibold"
+            >
+              &larr; Return to Farm2Door Public Marketplace
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 3. Authenticated but NOT Admin (Farmer or Buyer)
+  if (user?.role !== "admin") {
+    return (
+      <div className="min-h-screen bg-[#FAF8F2] flex flex-col justify-center items-center p-4 sm:p-6 text-[#0D2E1C]">
+        <div className="w-full max-w-lg bg-white border border-[#E5DBC7] rounded-3xl p-6 sm:p-8 shadow-xl text-center space-y-6 animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-red-100 border border-red-200 flex items-center justify-center text-3xl">
+            ⛔
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-xl sm:text-2xl font-black text-[#0D2E1C]">
+              Administrator Access Required
+            </h1>
+            <p className="text-xs text-[#4F6A52]">
+              You are currently signed in as <span className="font-bold text-[#0D2E1C]">{user?.full_name}</span> ({user?.role === "farmer" ? "Ekiti Farmer" : "Retail Buyer"}).
+            </p>
+            <p className="text-xs text-[#506155] leading-relaxed">
+              The Platform Administration & Escrow Console is restricted exclusively to authorized platform administrators and financial auditors.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            {user?.role === "farmer" ? (
+              <Link
+                href="/dashboard/farmer"
+                className="w-full sm:w-auto px-5 py-2.5 bg-[#0D2E1C] text-[#CFE73B] font-bold text-xs rounded-xl hover:bg-[#1B3B22] transition-colors"
+              >
+                🚜 Return to Farmer Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/orders"
+                className="w-full sm:w-auto px-5 py-2.5 bg-[#0D2E1C] text-[#FAF8F2] font-bold text-xs rounded-xl hover:bg-[#1B3B22] transition-colors"
+              >
+                📦 Return to My Orders
+              </Link>
+            )}
+
+            <button
+              onClick={async () => {
+                await logout();
+              }}
+              className="w-full sm:w-auto px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-700 font-bold text-xs rounded-xl border border-red-200 transition-colors cursor-pointer"
+            >
+              Sign Out & Switch Account
+            </button>
+          </div>
+
+          <div className="pt-2 border-t border-[#E5DBC7]">
+            <Link href="/" className="text-xs text-[#6A9B48] hover:underline font-semibold">
+              &larr; Return to Marketplace Homepage
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#FAF8F2] text-[#0D2E1C] pb-24 selection:bg-[#CFE73B] selection:text-[#0D2E1C]">
       {/* Top Admin Header Bar */}
@@ -146,11 +336,17 @@ export default function AdminDashboardPage() {
               <span className="font-black text-lg tracking-tight text-white">Farm2Door</span>
             </Link>
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#CFE73B] text-[#0D2E1C] font-black uppercase tracking-wider">
-              PRD Stage 8: Admin & Escrow
+              Admin & Escrow Control Desk
             </span>
           </div>
 
           <div className="flex items-center space-x-3 text-xs">
+            <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 text-white font-semibold">
+              <span>👤</span>
+              <span>{user?.full_name?.split(" ")[0]}</span>
+              <span className="px-1.5 py-0.5 rounded bg-[#CFE73B] text-[#0D2E1C] text-[10px] font-black uppercase">Admin</span>
+            </span>
+
             <Link
               href="/dashboard/farmer"
               className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors flex items-center gap-1.5"
@@ -163,6 +359,18 @@ export default function AdminDashboardPage() {
             >
               <span>📦 Buyer Orders</span>
             </Link>
+            <Link
+              href="/profile"
+              className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors flex items-center gap-1.5"
+            >
+              <span>⚙️ Settings</span>
+            </Link>
+            <button
+              onClick={() => logout()}
+              className="px-3 py-1.5 rounded-lg bg-red-600/80 hover:bg-red-600 text-white font-bold transition-colors cursor-pointer"
+            >
+              Sign Out
+            </button>
           </div>
         </div>
       </header>

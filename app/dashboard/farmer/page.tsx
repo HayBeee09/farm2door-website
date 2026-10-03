@@ -377,6 +377,54 @@ export default function FarmerDashboardPage() {
       location: user?.farm_location || "Ikere-Ekiti",
     };
 
+  // Guard: If authenticated as a retail buyer, display informative redirect screen
+  if (!isAuthLoading && user && user.role === "buyer") {
+    return (
+      <div className="min-h-screen bg-[#FAF8F2] flex flex-col justify-center items-center p-4 sm:p-6 text-[#0D2E1C]">
+        <div className="w-full max-w-lg bg-white border border-[#E5DBC7] rounded-3xl p-6 sm:p-8 shadow-xl text-center space-y-6 animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-[#EBF3E8] border border-[#CDE1C8] flex items-center justify-center text-3xl">
+            🚜
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-xl sm:text-2xl font-black text-[#0D2E1C]">
+              Farmer Producer Portal
+            </h1>
+            <p className="text-xs text-[#4F6A52]">
+              You are currently signed in as <span className="font-bold text-[#0D2E1C]">{user.full_name}</span> (Retail Buyer).
+            </p>
+            <p className="text-xs text-[#506155] leading-relaxed">
+              This console is dedicated to verified smallholder farmers managing produce stock, harvest pricing, and dispatch fulfillment.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <Link
+              href="/"
+              className="w-full sm:w-auto px-5 py-2.5 bg-[#0D2E1C] text-[#CFE73B] font-bold text-xs rounded-xl hover:bg-[#1B3B22] transition-colors"
+            >
+              🛒 Return to Marketplace
+            </Link>
+            <Link
+              href="/orders"
+              className="w-full sm:w-auto px-5 py-2.5 bg-white border border-[#E5DBC7] hover:bg-[#F2ECE0] text-[#0D2E1C] font-bold text-xs rounded-xl transition-colors"
+            >
+              📦 My Orders
+            </Link>
+          </div>
+
+          <div className="pt-2 border-t border-[#E5DBC7]">
+            <button
+              onClick={() => openAuthModal("register", "farmer")}
+              className="text-xs text-[#6A9B48] hover:underline font-bold cursor-pointer"
+            >
+              Register as an Ekiti Smallholder Farmer &rarr;
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#FAF8F2] text-[#0D2E1C]">
       {/* Top Header */}

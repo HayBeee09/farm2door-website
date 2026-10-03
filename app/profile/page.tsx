@@ -163,17 +163,30 @@ export default function ProfilePage() {
             {isFarmer && (
               <Link
                 href="/dashboard/farmer"
-                className="text-xs text-[#FAF8F2] bg-[#1B3B22] hover:bg-[#234A2D] px-3 py-1.5 rounded-full border border-[#2B5436] font-semibold transition-colors"
+                className="text-xs text-[#FAF8F2] bg-[#1B3B22] hover:bg-[#234A2D] px-3.5 py-1.5 rounded-full border border-[#2B5436] font-semibold transition-colors flex items-center gap-1.5"
               >
-                🚜 Farmer Dashboard
+                <span>🚜</span>
+                <span>Farmer Dashboard</span>
               </Link>
             )}
-            <Link
-              href="/orders"
-              className="text-xs text-[#FAF8F2] bg-[#1B3B22] hover:bg-[#234A2D] px-3 py-1.5 rounded-full border border-[#2B5436] font-semibold transition-colors"
-            >
-              📦 My Orders
-            </Link>
+            {user?.role === "buyer" && (
+              <Link
+                href="/orders"
+                className="text-xs text-[#FAF8F2] bg-[#1B3B22] hover:bg-[#234A2D] px-3.5 py-1.5 rounded-full border border-[#2B5436] font-semibold transition-colors flex items-center gap-1.5"
+              >
+                <span>📦</span>
+                <span>My Orders</span>
+              </Link>
+            )}
+            {user?.role === "admin" && (
+              <Link
+                href="/dashboard/admin"
+                className="text-xs text-[#0D2E1C] bg-[#CFE73B] hover:bg-[#BBD428] px-3.5 py-1.5 rounded-full font-bold transition-colors flex items-center gap-1.5 shadow-xs"
+              >
+                <span>🏛️</span>
+                <span>Platform Admin Desk</span>
+              </Link>
+            )}
           </div>
         </div>
       </header>
@@ -202,13 +215,41 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            <span className="px-3 py-1 bg-[#FAF8F2] border border-[#E5DBC7] text-[#0D2E1C] text-xs font-bold rounded-xl uppercase tracking-wider">
-              Role: {user?.role}
+          <div className="flex flex-wrap items-center gap-2">
+            <span
+              className={`px-3 py-1 text-xs font-bold rounded-xl uppercase tracking-wider ${
+                user?.role === "admin"
+                  ? "bg-[#CFE73B] text-[#0D2E1C]"
+                  : user?.role === "farmer"
+                  ? "bg-[#0D2E1C] text-[#CFE73B]"
+                  : "bg-[#FAF8F2] border border-[#E5DBC7] text-[#0D2E1C]"
+              }`}
+            >
+              {user?.role === "admin"
+                ? "Platform Admin"
+                : user?.role === "farmer"
+                ? "Ekiti Farmer"
+                : "Retail Buyer"}
             </span>
             <span className="px-3 py-1 bg-[#FAF8F2] border border-[#E5DBC7] text-[#4F6A52] text-xs font-medium rounded-xl">
-              📍 {user?.farm_location || "Ekiti State, NG"}
+              📍 {user?.farm_location || user?.address || "Ekiti State, NG"}
             </span>
+            {user?.role === "admin" && (
+              <Link
+                href="/dashboard/admin"
+                className="px-3 py-1 bg-[#0D2E1C] text-[#CFE73B] text-xs font-bold rounded-xl hover:bg-[#1B3B22] transition-colors"
+              >
+                Go to Admin Desk →
+              </Link>
+            )}
+            {user?.role === "farmer" && (
+              <Link
+                href="/dashboard/farmer"
+                className="px-3 py-1 bg-[#0D2E1C] text-[#CFE73B] text-xs font-bold rounded-xl hover:bg-[#1B3B22] transition-colors"
+              >
+                Go to Farmer Dashboard →
+              </Link>
+            )}
           </div>
         </div>
 
