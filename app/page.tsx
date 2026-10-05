@@ -410,27 +410,42 @@ export default function Home() {
               <a href="#direct-pricing" className="hover:text-[#CFE73B] transition-colors">
                 Pricing Index
               </a>
+              {user?.role === "farmer" && (
+                <Link href="/dashboard/farmer" className="text-[#CFE73B] font-bold hover:underline">
+                  Farmer Portal
+                </Link>
+              )}
             </nav>
 
             {/* RIGHT: Outline Cart Icon + Auth + Pear Green Pill CTA Button */}
             <div className="flex items-center gap-4 sm:gap-5">
-              {/* Minimalist Outline Shopping Bag with Badge */}
-              <button
-                onClick={() => setIsCartOpen(true)}
-                className="relative p-2 text-white hover:text-[#CFE73B] transition-colors focus:outline-none"
-                aria-label="Shopping Cart"
-              >
-                {/* Outline Bag Icon matching the screenshot */}
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                  <line x1="3" y1="6" x2="21" y2="6"/>
-                  <path d="M16 10a4 4 0 0 1-8 0"/>
-                </svg>
-                {/* Floating Round Badge for Cart Count */}
-                <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-[#CFE73B] text-[#0D2E1C] font-black text-[10px] flex items-center justify-center">
-                  {totalCartCount}
-                </span>
-              </button>
+              {/* Minimalist Outline Shopping Bag with Badge (Only for Buyers & Guests) */}
+              {user?.role !== "farmer" ? (
+                <button
+                  onClick={() => setIsCartOpen(true)}
+                  className="relative p-2 text-white hover:text-[#CFE73B] transition-colors focus:outline-none cursor-pointer"
+                  aria-label="Shopping Cart"
+                >
+                  {/* Outline Bag Icon matching the screenshot */}
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                  </svg>
+                  {/* Floating Round Badge for Cart Count */}
+                  <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-[#CFE73B] text-[#0D2E1C] font-black text-[10px] flex items-center justify-center">
+                    {totalCartCount}
+                  </span>
+                </button>
+              ) : (
+                <Link
+                  href="/dashboard/farmer"
+                  className="px-3 py-1.5 bg-[#CFE73B] text-[#0D2E1C] hover:bg-[#BBD428] text-xs font-bold rounded-full transition-all flex items-center gap-1.5 shadow-sm"
+                >
+                  <span>🚜</span>
+                  <span className="hidden sm:inline">Farmer Portal</span>
+                </Link>
+              )}
 
               {/* Authentication Status: Sign In or User Pill */}
               {!isAuthenticated ? (
@@ -1537,12 +1552,28 @@ export default function Home() {
             </div>
 
             <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3">
-              <button
-                onClick={() => alert("Farmer registration form will connect to /api/auth/register with role='farmer'.")}
-                className="px-6 py-3.5 bg-[#CFE73B] hover:bg-[#BBD428] text-[#0D2E1C] font-black text-sm rounded-full transition-colors text-center"
-              >
-                Register as a Local Farmer
-              </button>
+              {user?.role === "farmer" ? (
+                <Link
+                  href="/dashboard/farmer"
+                  className="px-6 py-3.5 bg-[#CFE73B] hover:bg-[#BBD428] text-[#0D2E1C] font-black text-sm rounded-full transition-colors text-center shadow-md"
+                >
+                  🚜 Go to Farmer Dashboard
+                </Link>
+              ) : user?.role === "buyer" ? (
+                <Link
+                  href="/orders"
+                  className="px-6 py-3.5 bg-[#CFE73B] hover:bg-[#BBD428] text-[#0D2E1C] font-black text-sm rounded-full transition-colors text-center shadow-md"
+                >
+                  📦 View My Buyer Orders
+                </Link>
+              ) : (
+                <button
+                  onClick={() => openAuthModal("register", "farmer")}
+                  className="px-6 py-3.5 bg-[#CFE73B] hover:bg-[#BBD428] text-[#0D2E1C] font-black text-sm rounded-full transition-colors text-center cursor-pointer shadow-md"
+                >
+                  Register as a Local Farmer
+                </button>
+              )}
               <a
                 href="#catalog"
                 className="px-6 py-3.5 bg-[#134229] hover:bg-[#1B5A38] text-[#FAF8F2] font-bold text-sm rounded-full transition-colors text-center border border-[#25784B]"

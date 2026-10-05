@@ -238,18 +238,24 @@ Stage 9: Security Hardening, Performance (<1.5MB) & Production Verification (Com
 * **PRD Requirement:** Section 4.5 (Module 5), FR-5.1 & FR-5.2.
 * **Objective:** Eliminate fake ratings; only buyers with completed, delivered orders can review.
 
-- [x] **7.1 Eligibility Verification Guard:**
-  - Check database: Buyer ID must have an order with `status = 'delivered'` containing `product_id`.
-  - Reject review submissions if order is incomplete or not delivered (enforces HTTP 403).
+- [x] **7.1 Anti-Fraud Eligibility Verification Guard:**
+  - Database Query: `POST /api/reviews` queries Supabase PostgreSQL `orders` and `order_items` verifying that the requesting buyer has an order with `status = 'delivered'` for that specific produce item before accepting 1-to-5 star ratings and qualitative reviews.
+  - Strict Anti-Fraud Intercept: Rejects review submissions if the produce has not been marked delivered (HTTP 403 Forbidden).
+  - Role Safeguard: Farmers are prohibited from submitting buyer ratings on produce (HTTP 403 Forbidden).
+  - Duplicate Prevention: Rejects multiple reviews on the same delivered order item (HTTP 409 Conflict).
 - [x] **7.2 Review Submission API (`/api/reviews`):**
-  - Accept `product_id`, `rating` (1 to 5 integer), and feedback review text.
-  - Prevent duplicate reviews for the same completed order item (enforces HTTP 409 Conflict).
+  - Accept `product_id`, `rating` (1 to 5 integer), and qualitative feedback review text.
+  - Verifies buyer order delivery record in PostgreSQL, persists to `public.reviews` and persistent store.
 - [x] **7.3 Dynamic Arithmetic Mean Aggregator:**
   - Compute and cache average rating and review counts on product cards and farmer profiles:
     $$\text{Mean} = \frac{\sum \text{ratings}}{\text{Total Reviews}}$$
-- [x] **7.4 Review Display UI:**
+- [x] **7.4 Review Display & Submission UI:**
   - Verified Buyer badge on produce cards and farmer profile sheets.
-  - Interactive review drawer (`ProductReviewsDrawer`) and delivered order rating modal (`ReviewModal`).
+  - Interactive review drawer (`ProductReviewsDrawer`) with anti-fraud verification badge and live order rating trigger.
+  - Delivered order rating modal (`ReviewModal`) integrated into both `/orders` and `/orders/[reference]`.
+- [x] **7.5 Strict Category & Portal Isolation (Buyer vs Farmer):**
+  - Buyers cannot access or view the Farmer Portal (`/dashboard/farmer` and `/dashboard/farmer/new-listing`). Removed erroneous `"View in Farmer Portal"` button from checkout confirmation, replaced with `"View All My Orders"`.
+  - Farmers are restricted to the Farmer Category: cannot access retail buyer orders (`/orders`), retail cart drawer is hidden on homepage in favor of direct Farmer Portal navigation, and retail checkout submission is guarded against farmer accounts.
 
 ---
 

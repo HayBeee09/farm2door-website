@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { useAuth } from "@/lib/auth-context";
+import ReviewModal from "@/components/reviews/ReviewModal";
 
 interface Review {
   id: string;
@@ -44,6 +46,8 @@ export default function ProductReviewsDrawer({
   farmerName,
   location,
 }: ProductReviewsDrawerProps) {
+  const { user } = useAuth();
+
   const [reviews, setReviews] = useState<Review[]>([]);
   const [stats, setStats] = useState<RatingStats>({
     averageRating: 5.0,
@@ -51,18 +55,36 @@ export default function ProductReviewsDrawer({
     distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [eligibility, setEligibility] = useState<{
+    eligible: boolean;
+    alreadyReviewed?: boolean;
+    orderReference?: string;
+    reason?: string;
+  } | null>(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   useEffect(() => {
     if (!isOpen || !productId) return;
 
-    async function fetchReviews() {
+    async function fetchReviewsAndEligibility() {
       setIsLoading(true);
       try {
-        const res = await fetch(`/api/reviews?product_id=${encodeURIComponent(productId as string)}`);
-        if (res.ok) {
-          const data = await res.json();
+        const [revRes, eligRes] = await Promise.all([
+          fetch(`/api/reviews?product_id=${encodeURIComponent(productId as string)}`),
+          fetch(`/api/reviews?product_id=${encodeURIComponent(productId as string)}&check_eligibility=true`),
+        ]);
+
+        if (revRes.ok) {
+          const data = await revRes.json();
           if (data.reviews) setReviews(data.reviews);
           if (data.stats) setStats(data.stats);
+        }
+
+        if (eligRes.ok) {
+          const eligData = await eligRes.json();
+          if (eligData.eligibility) {
+            setEligibility(eligData.eligibility);
+          }
         }
       } catch (err) {
         console.warn("Reviews fetch error:", err);
@@ -71,10 +93,20 @@ export default function ProductReviewsDrawer({
       }
     }
 
-    fetchReviews();
-  }, [isOpen, productId]);
+    fetchReviewsAndEligibility();
+  }, [isOpen, productId, user]);
 
   if (!isOpen) return null;
+
+  const handleReviewSubmitted = (newRev: Review) => {
+    setReviews((prev) => [newRev, ...prev]);
+    setEligibility({
+      eligible: false,
+      alreadyReviewed: true,
+      orderReference: newRev.orderReference,
+      reason: `You have submitted a verified review for this harvest under order ${newRev.orderReference}.`,
+    });
+  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-xs flex justify-end">
@@ -124,6 +156,43 @@ export default function ProductReviewsDrawer({
           </div>
         )}
 
+        {/* Anti-Fraud Verification Badge & Review Action */}
+        <div className="p-4 bg-white border-b border-[#E5DBC7] space-y-2 shrink-0">
+          <div className="flex items-start gap-2.5 text-xs">
+            <span className="text-base shrink-0">🛡️</span>
+            <div>
+              <strong className="text-[#0D2E1C] block font-bold text-xs">
+                Verified Peer Review Anti-Fraud Guard
+              </strong>
+              <p className="text-[11px] text-[#4F6A52] leading-tight mt-0.5">
+                The database verifies that the buyer has an order with status &lsquo;delivered&rsquo; for this specific produce before accepting 1-to-5 star ratings and reviews.
+              </p>
+            </div>
+          </div>
+
+          {eligibility?.eligible && (
+            <div className="mt-2 pt-2 border-t border-[#E5DBC7] flex items-center justify-between gap-2">
+              <span className="text-[11px] font-bold text-[#166534]">
+                ✓ Delivered Order on Record ({eligibility.orderReference})
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsReviewModalOpen(true)}
+                className="px-3 py-1.5 bg-[#166534] hover:bg-[#14532D] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer flex items-center gap-1 shadow-2xs whitespace-nowrap"
+              >
+                <span>⭐</span>
+                <span>Rate Harvest</span>
+              </button>
+            </div>
+          )}
+
+          {eligibility?.alreadyReviewed && (
+            <div className="mt-2 pt-2 border-t border-[#E5DBC7] text-[11px] font-semibold text-[#166534] bg-[#DCFCE7] px-3 py-1.5 rounded-xl border border-[#BBF7D0]">
+              ✓ You have submitted a verified review for this produce ({eligibility.orderReference})
+            </div>
+          )}
+        </div>
+
         {/* Reviews List & Distribution (Scrollable) */}
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
           {/* Summary Arithmetic Mean Card */}
@@ -165,33 +234,21 @@ export default function ProductReviewsDrawer({
             </div>
           </div>
 
-          {/* Loading */}
+          {/* List of Verified Reviews */}
           {isLoading ? (
-            <div className="py-12 text-center text-xs text-[#4F6A52]">
-              <svg className="animate-spin h-6 w-6 text-[#6A9B48] mx-auto mb-2" viewBox="0 0 24 24" fill="none">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-              <span>Loading verified reviews...</span>
+            <div className="text-center py-10 text-xs text-[#4F6A52]">
+              Loading verified reviews...
             </div>
           ) : reviews.length === 0 ? (
-            <div className="py-12 text-center text-xs text-[#4F6A52] bg-white rounded-2xl border border-[#E5DBC7] p-6">
-              <span className="text-3xl block mb-2">🌿</span>
-              <p className="font-bold text-[#0D2E1C]">No Reviews Yet</p>
-              <p className="text-[11px] mt-1">
-                Be the first to review this harvest after your order is delivered!
+            <div className="p-8 text-center bg-white rounded-2xl border border-[#E5DBC7] space-y-2">
+              <span className="text-3xl block">🧺</span>
+              <p className="text-xs font-bold text-[#0D2E1C]">No Peer Reviews Yet</p>
+              <p className="text-[11px] text-[#4F6A52]">
+                Be the first verified buyer to receive delivery of this crop and share your rating!
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-[#4F6A52]">
-                Customer Testimonials ({reviews.length})
-              </h4>
-
+            <div className="space-y-3">
               {reviews.map((rev) => (
                 <div
                   key={rev.id}
@@ -212,7 +269,7 @@ export default function ProductReviewsDrawer({
                   </div>
 
                   <p className="text-xs text-[#2B5436] leading-relaxed">
-                    "{rev.comment}"
+                    &ldquo;{rev.comment}&rdquo;
                   </p>
 
                   <div className="pt-2 border-t border-[#FAF8F2] flex items-center justify-between text-[10px] text-[#4F6A52]">
@@ -245,6 +302,19 @@ export default function ProductReviewsDrawer({
           </button>
         </div>
       </div>
+
+      {/* Embedded Review Modal if user initiates review from drawer */}
+      {isReviewModalOpen && productId && (
+        <ReviewModal
+          isOpen={isReviewModalOpen}
+          onClose={() => setIsReviewModalOpen(false)}
+          productId={productId}
+          productName={productName || "Ekiti Produce"}
+          orderReference={eligibility?.orderReference || ""}
+          farmerName={farmerName}
+          onReviewSubmitted={handleReviewSubmitted}
+        />
+      )}
     </div>
   );
 }

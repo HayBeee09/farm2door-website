@@ -258,6 +258,7 @@ export function checkReviewEligibility(params: {
   orderReference?: string;
   buyerId?: string;
   buyerEmail?: string;
+  buyerName?: string;
 }): {
   eligible: boolean;
   orderReference?: string;
@@ -270,35 +271,49 @@ export function checkReviewEligibility(params: {
 
   const targetIds = [params.productId, ...(PRODUCT_ID_ALIASES[params.productId] || [])];
 
-  // Find delivered orders containing this product
+  // Find delivered orders containing this product and matching the requesting buyer
   const eligibleOrders = allOrders.filter((ord) => {
     const isDelivered = ord.status === "delivered";
     const hasProduct = ord.items.some((i) => targetIds.includes(i.productId));
     const matchesRef = params.orderReference
       ? ord.orderReference === params.orderReference.trim()
       : true;
+    const matchesBuyer =
+      params.buyerId || params.buyerEmail || params.buyerName
+        ? (Boolean(params.buyerId) && ord.buyerId === params.buyerId) ||
+          (Boolean(params.buyerEmail) && Boolean(ord.buyerEmail) && ord.buyerEmail?.toLowerCase() === params.buyerEmail?.toLowerCase()) ||
+          (Boolean(params.buyerName) && Boolean(ord.buyerName) && ord.buyerName?.toLowerCase() === params.buyerName?.toLowerCase())
+        : true;
 
-    return isDelivered && hasProduct && matchesRef;
+    return isDelivered && hasProduct && matchesRef && matchesBuyer;
   });
 
   if (eligibleOrders.length === 0) {
-    // Check if an order exists but is not delivered
-    const nonDeliveredOrder = allOrders.find(
-      (ord) =>
-        ord.items.some((i) => targetIds.includes(i.productId)) &&
-        (!params.orderReference || ord.orderReference === params.orderReference.trim())
-    );
+    // Check if an order exists for this buyer but is not yet delivered
+    const nonDeliveredOrder = allOrders.find((ord) => {
+      const hasProduct = ord.items.some((i) => targetIds.includes(i.productId));
+      const matchesRef = params.orderReference
+        ? ord.orderReference === params.orderReference.trim()
+        : true;
+      const matchesBuyer =
+        params.buyerId || params.buyerEmail || params.buyerName
+          ? (Boolean(params.buyerId) && ord.buyerId === params.buyerId) ||
+            (Boolean(params.buyerEmail) && Boolean(ord.buyerEmail) && ord.buyerEmail?.toLowerCase() === params.buyerEmail?.toLowerCase()) ||
+            (Boolean(params.buyerName) && Boolean(ord.buyerName) && ord.buyerName?.toLowerCase() === params.buyerName?.toLowerCase())
+          : true;
+      return hasProduct && matchesRef && matchesBuyer;
+    });
 
     if (nonDeliveredOrder) {
       return {
         eligible: false,
-        reason: `Order ${nonDeliveredOrder.orderReference} is currently "${nonDeliveredOrder.status}". Reviews can only be submitted once the produce has been delivered to your doorstep.`,
+        reason: `Fraud Prevention Intercept: Order ${nonDeliveredOrder.orderReference} is currently "${nonDeliveredOrder.status}". Reviews can only be accepted once the produce has been delivered to your doorstep.`,
       };
     }
 
     return {
       eligible: false,
-      reason: "No delivered order found for this produce. Only verified buyers with completed deliveries can submit reviews.",
+      reason: "Fraud Prevention Intercept: No delivered order found for this produce. The review submission endpoint requires an order with status 'delivered' for that specific produce before accepting ratings.",
     };
   }
 

@@ -243,11 +243,11 @@ export default function CheckoutModal() {
                 <span>📦 Track Order Lifecycle</span>
               </Link>
               <Link
-                href="/dashboard/farmer"
+                href="/orders"
                 onClick={handleClose}
-                className="flex-1 py-3 bg-[#166534] hover:bg-[#14532D] text-white text-xs font-bold rounded-xl transition-colors text-center flex items-center justify-center space-x-2 shadow-xs"
+                className="flex-1 py-3 bg-[#FAF8F2] hover:bg-[#F2ECE0] text-[#0D2E1C] border border-[#E5DBC7] text-xs font-bold rounded-xl transition-colors text-center flex items-center justify-center space-x-2 shadow-xs"
               >
-                <span>🚜 View In Farmer Portal</span>
+                <span>📦 View All My Orders</span>
               </Link>
             </div>
             <button
@@ -261,6 +261,19 @@ export default function CheckoutModal() {
         ) : (
           /* VIEW 3: DUMMY CHECKOUT FORM */
           <form onSubmit={handleSubmitCheckout} className="space-y-5">
+            {/* Farmer Category Restriction Warning */}
+            {user?.role === "farmer" && (
+              <div className="p-3.5 bg-amber-50 border border-amber-300 text-amber-900 rounded-xl text-xs space-y-1">
+                <div className="flex items-center gap-1.5 font-bold">
+                  <span>🚜</span>
+                  <span>Farmer Category Account Detected</span>
+                </div>
+                <p className="text-[11px] text-amber-800">
+                  You are registered as an Ekiti Farmer. Produce purchasing is reserved for retail buyers. Farmers manage harvest stock and dispatch in the Farmer Portal.
+                </p>
+              </div>
+            )}
+
             {/* Quick-fill helper for instant sample address */}
             <div className="flex items-center justify-between p-3 bg-[#FAF8F2] border border-[#E5DBC7] rounded-xl text-xs">
               <span className="text-[11px] text-[#4F6A52] font-semibold">
@@ -448,7 +461,7 @@ export default function CheckoutModal() {
               </button>
               <button
                 type="submit"
-                disabled={isSubmitting || items.length === 0}
+                disabled={isSubmitting || items.length === 0 || user?.role === "farmer"}
                 className="px-6 py-3 bg-[#0D2E1C] hover:bg-[#1B3B22] text-[#CFE73B] text-xs font-bold rounded-xl transition-all shadow-sm flex items-center space-x-2 cursor-pointer disabled:opacity-50"
               >
                 {isSubmitting ? (
@@ -463,6 +476,8 @@ export default function CheckoutModal() {
                     </svg>
                     <span>Acquiring Concurrency Lock & Settle...</span>
                   </>
+                ) : user?.role === "farmer" ? (
+                  <span>🚜 Farmer Accounts Cannot Place Orders</span>
                 ) : (
                   <span>⚡ Complete Checkout (₦{grandTotal.toLocaleString()})</span>
                 )}

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/lib/auth-context";
+import ReviewModal from "@/components/reviews/ReviewModal";
 
 interface OrderItem {
   productId: string;
@@ -41,6 +42,13 @@ export default function BuyerOrdersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [disputedOrderMap, setDisputedOrderMap] = useState<Record<string, { id: string; status: string }>>({});
+  const [reviewingItem, setReviewingItem] = useState<{
+    productId: string;
+    productName: string;
+    orderReference: string;
+    farmerName?: string;
+  } | null>(null);
+  const [reviewedKeyMap, setReviewedKeyMap] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     async function fetchOrders() {
@@ -89,6 +97,42 @@ export default function BuyerOrdersPage() {
   const totalSpent = orders.reduce((sum, o) => sum + (Number(o.totalAmount) || 0), 0);
   const deliveredCount = orders.filter((o) => o.status === "delivered").length;
   const inTransitCount = orders.filter((o) => o.status === "in_transit").length;
+
+  // STRICT CATEGORY ISOLATION: Farmers cannot access the retail buyer orders page
+  if (!isLoading && isAuthenticated && user?.role === "farmer") {
+    return (
+      <div className="min-h-screen bg-[#FAF8F2] flex flex-col justify-center items-center p-4 sm:p-6 text-[#0D2E1C]">
+        <div className="w-full max-w-lg bg-white border border-[#E5DBC7] rounded-3xl p-6 sm:p-8 shadow-xl text-center space-y-6 animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-[#EBF3E8] border border-[#CDE1C8] flex items-center justify-center text-3xl">
+            🚜
+          </div>
+          <div className="space-y-2">
+            <span className="text-[11px] font-black uppercase tracking-wider text-[#166534] bg-[#DCFCE7] px-3 py-1 rounded-full border border-[#BBF7D0]">
+              Farmer Category Account
+            </span>
+            <h1 className="text-xl sm:text-2xl font-black text-[#0D2E1C]">
+              Farmer Category Portal
+            </h1>
+            <p className="text-xs text-[#4F6A52]">
+              You are signed in as <span className="font-bold text-[#0D2E1C]">{user.full_name}</span> (Ekiti Farmer).
+            </p>
+            <p className="text-xs text-[#506155] leading-relaxed">
+              Under platform category isolation rules, the retail buyer orders page is reserved for household consumers. Inbound purchase orders for your farm produce, inventory updates, and dispatch logistics are managed in your dedicated Farmer Dashboard.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <Link
+              href="/dashboard/farmer"
+              className="w-full sm:w-auto px-6 py-3 bg-[#0D2E1C] hover:bg-[#1B3B22] text-[#CFE73B] font-bold text-xs rounded-xl transition-colors shadow-sm"
+            >
+              🚜 Open Farmer Dashboard &rarr;
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FAF8F2] text-[#0D2E1C]">
@@ -348,9 +392,37 @@ export default function BuyerOrdersPage() {
                           </div>
                         </div>
 
-                        <span className="text-xs font-black text-[#0D2E1C]">
-                          ₦{Number(item.subtotal).toLocaleString()}
-                        </span>
+                        <div className="flex flex-col items-end gap-1.5 shrink-0">
+                          <span className="text-xs font-black text-[#0D2E1C]">
+                            ₦{Number(item.subtotal).toLocaleString()}
+                          </span>
+
+                          {ord.status === "delivered" && (
+                            <div>
+                              {reviewedKeyMap[`${ord.orderReference}_${item.productId}`] ? (
+                                <span className="text-[10px] font-bold text-[#166534] bg-[#DCFCE7] px-2 py-0.5 rounded-full border border-[#BBF7D0]">
+                                  ✓ Reviewed ★
+                                </span>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setReviewingItem({
+                                      productId: item.productId,
+                                      productName: item.productName,
+                                      orderReference: ord.orderReference,
+                                      farmerName: item.farmName,
+                                    })
+                                  }
+                                  className="px-2.5 py-1 bg-[#166534] hover:bg-[#14532D] text-white text-[10px] font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                                >
+                                  <span>⭐</span>
+                                  <span>Rate Harvest</span>
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -384,6 +456,24 @@ export default function BuyerOrdersPage() {
           </div>
         )}
       </main>
+
+      {/* Verified Peer Review Submission Modal (PRD Module 5) */}
+      {reviewingItem && (
+        <ReviewModal
+          isOpen={!!reviewingItem}
+          onClose={() => setReviewingItem(null)}
+          productId={reviewingItem.productId}
+          productName={reviewingItem.productName}
+          orderReference={reviewingItem.orderReference}
+          farmerName={reviewingItem.farmerName}
+          onReviewSubmitted={() => {
+            setReviewedKeyMap((prev) => ({
+              ...prev,
+              [`${reviewingItem.orderReference}_${reviewingItem.productId}`]: true,
+            }));
+          }}
+        />
+      )}
     </div>
   );
 }

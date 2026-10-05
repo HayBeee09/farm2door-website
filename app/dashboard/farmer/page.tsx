@@ -377,47 +377,90 @@ export default function FarmerDashboardPage() {
       location: user?.farm_location || "Ikere-Ekiti",
     };
 
-  // Guard: If authenticated as a retail buyer, display informative redirect screen
-  if (!isAuthLoading && user && user.role === "buyer") {
+  // Guard 1: If unauthenticated, require farmer login
+  if (!isAuthLoading && !user) {
     return (
       <div className="min-h-screen bg-[#FAF8F2] flex flex-col justify-center items-center p-4 sm:p-6 text-[#0D2E1C]">
         <div className="w-full max-w-lg bg-white border border-[#E5DBC7] rounded-3xl p-6 sm:p-8 shadow-xl text-center space-y-6 animate-in fade-in zoom-in-95 duration-200">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-[#EBF3E8] border border-[#CDE1C8] flex items-center justify-center text-3xl">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-[#0D2E1C] text-[#CFE73B] flex items-center justify-center text-3xl shadow-sm">
             🚜
           </div>
           <div className="space-y-2">
+            <span className="text-[11px] font-black uppercase tracking-wider text-[#166534] bg-[#DCFCE7] px-3 py-1 rounded-full border border-[#BBF7D0]">
+              Ekiti Farmer Portal Gateway
+            </span>
             <h1 className="text-xl sm:text-2xl font-black text-[#0D2E1C]">
-              Farmer Producer Portal
+              Farmer Sign In Required
+            </h1>
+            <p className="text-xs text-[#4F6A52] leading-relaxed">
+              This portal is restricted to registered Ekiti smallholder farmers. Please sign in with your farmer account to manage crop inventory, dispatch orders, and bank settlement.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => openAuthModal("login", "farmer")}
+              className="w-full sm:w-auto px-6 py-3 bg-[#0D2E1C] hover:bg-[#1B3B22] text-[#CFE73B] font-bold text-xs rounded-xl transition-colors cursor-pointer shadow-sm"
+            >
+              Sign In as Farmer &rarr;
+            </button>
+            <Link
+              href="/"
+              className="w-full sm:w-auto px-5 py-3 bg-white border border-[#E5DBC7] hover:bg-[#F2ECE0] text-[#0D2E1C] font-bold text-xs rounded-xl transition-colors"
+            >
+              ← Back to Marketplace
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Guard 2: STRICT CATEGORY ISOLATION — If authenticated as a buyer, strictly block viewing farmer portal
+  if (!isAuthLoading && user && user.role === "buyer") {
+    return (
+      <div className="min-h-screen bg-[#FAF8F2] flex flex-col justify-center items-center p-4 sm:p-6 text-[#0D2E1C]">
+        <div className="w-full max-w-lg bg-white border border-red-200 rounded-3xl p-6 sm:p-8 shadow-xl text-center space-y-6 animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center text-3xl">
+            🚫
+          </div>
+          <div className="space-y-2">
+            <span className="text-[11px] font-black uppercase tracking-wider text-red-700 bg-red-50 px-3 py-1 rounded-full border border-red-200">
+              Category Access Restricted
+            </span>
+            <h1 className="text-xl sm:text-2xl font-black text-[#0D2E1C]">
+              No Access to Farmer Portal
             </h1>
             <p className="text-xs text-[#4F6A52]">
-              You are currently signed in as <span className="font-bold text-[#0D2E1C]">{user.full_name}</span> (Retail Buyer).
+              You are signed in as <span className="font-bold text-[#0D2E1C]">{user.full_name}</span> with a <strong>Buyer Account</strong>.
             </p>
             <p className="text-xs text-[#506155] leading-relaxed">
-              This console is dedicated to verified smallholder farmers managing produce stock, harvest pricing, and dispatch fulfillment.
+              Under platform category isolation rules, registered buyers do not have access to view or operate in the Farmer Portal. You can only access the Buyer category you signed up for.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <Link
+              href="/orders"
+              className="w-full sm:w-auto px-6 py-3 bg-[#0D2E1C] text-[#CFE73B] font-bold text-xs rounded-xl hover:bg-[#1B3B22] transition-colors shadow-xs"
+            >
+              📦 Go to My Buyer Orders & Deliveries
+            </Link>
+            <Link
               href="/"
-              className="w-full sm:w-auto px-5 py-2.5 bg-[#0D2E1C] text-[#CFE73B] font-bold text-xs rounded-xl hover:bg-[#1B3B22] transition-colors"
+              className="w-full sm:w-auto px-5 py-3 bg-white border border-[#E5DBC7] hover:bg-[#F2ECE0] text-[#0D2E1C] font-bold text-xs rounded-xl transition-colors"
             >
               🛒 Return to Marketplace
             </Link>
-            <Link
-              href="/orders"
-              className="w-full sm:w-auto px-5 py-2.5 bg-white border border-[#E5DBC7] hover:bg-[#F2ECE0] text-[#0D2E1C] font-bold text-xs rounded-xl transition-colors"
-            >
-              📦 My Orders
-            </Link>
           </div>
 
-          <div className="pt-2 border-t border-[#E5DBC7]">
+          <div className="pt-2 border-t border-[#E5DBC7] flex items-center justify-center">
             <button
-              onClick={() => openAuthModal("register", "farmer")}
-              className="text-xs text-[#6A9B48] hover:underline font-bold cursor-pointer"
+              onClick={() => logout()}
+              className="text-xs text-red-600 hover:underline font-semibold cursor-pointer"
             >
-              Register as an Ekiti Smallholder Farmer &rarr;
+              Sign out to switch account
             </button>
           </div>
         </div>
