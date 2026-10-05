@@ -383,7 +383,7 @@ export default function Home() {
                 {isCategoriesDropdownOpen && (
                   <div className="absolute top-full left-0 mt-3 w-56 rounded-2xl bg-[#FFFDF9] text-[#0D2E1C] border border-[#E5DBC7] shadow-xl py-2 z-50">
                     <div className="px-3 py-1.5 text-[10px] font-mono font-bold text-[#6A9B48] uppercase tracking-wider border-b border-[#E5DBC7]">
-                      6 Core Categories (PRD)
+                      Core Farm Categories
                     </div>
                     {PRODUCE_CATEGORIES.map((cat) => (
                       <button
@@ -410,11 +410,6 @@ export default function Home() {
               <a href="#direct-pricing" className="hover:text-[#CFE73B] transition-colors">
                 Pricing Index
               </a>
-              {user?.role === "farmer" && (
-                <Link href="/dashboard/farmer" className="text-[#CFE73B] font-bold hover:underline">
-                  Farmer Portal
-                </Link>
-              )}
             </nav>
 
             {/* RIGHT: Outline Cart Icon + Auth + Pear Green Pill CTA Button */}
@@ -675,7 +670,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 4. SIX CORE AGRICULTURAL CATEGORIES (PRD REQUIREMENT FR-2.1) */}
+      {/* 4. SIX CORE AGRICULTURAL CATEGORIES */}
       <section className="bg-[#F2ECE0] border-b border-[#E5DBC7] py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -753,7 +748,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. HARVEST PACKAGING UNITS FILTER BAR (PRD REQUIREMENT FR-2.2) */}
+      {/* 5. HARVEST PACKAGING UNITS FILTER BAR */}
       <section className="bg-[#FAF8F2] border-b border-[#E5DBC7] py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs font-bold text-[#0D2E1C]">
@@ -792,7 +787,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6. LIVE PRODUCE MARKETPLACE (PRD MODULE 2 & 3) */}
+      {/* 6. LIVE PRODUCE MARKETPLACE */}
       <section id="catalog" className="py-14 bg-[#FAF8F2] flex-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
@@ -811,7 +806,7 @@ export default function Home() {
 
             <div className="flex items-center gap-3">
               <span className="text-xs font-bold bg-[#FFFDF9] text-[#0D2E1C] px-3 py-2 rounded-xl border border-[#E5DBC7]">
-                ⚡ Concurrency Locked (ACID)
+                ⚡ Verified Farm Stock
               </span>
             </div>
           </div>
@@ -1092,12 +1087,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. PROBLEM VS SOLUTION / WHY FARMAN2DOOR (PRD SECTION 1.2) */}
+      {/* 7. PROBLEM VS SOLUTION / WHY FARM2DOOR */}
       <section id="middlemen-problem" className="bg-[#FFFDF9] border-t border-[#E5DBC7] py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-bold uppercase tracking-wider text-[#6A9B48]">
-              PRD Executive Problem Statement
+              Direct Agricultural Transparency
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-[#0D2E1C] tracking-tight mt-1">
               Why Traditional Produce Distribution Fails Nigeria
@@ -1155,8 +1150,8 @@ export default function Home() {
               </h3>
               <p className="text-xs text-[#506155] leading-relaxed">
                 Generic e-commerce platforms do not understand baskets of rodo,
-                bundles of ugwu, or tubers of new yam. Farm2Door enforces native
-                Nigerian harvest units with ACID concurrency locks.
+                bundles of ugwu, or tubers of new yam. Farm2Door enforces authentic
+                Nigerian harvest units with guaranteed stock reservation.
               </p>
               <div className="text-xs font-bold text-[#6A9B48] pt-2">
                 ✓ Native units & zero overselling
@@ -1339,12 +1334,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 8.5. PRICE TRANSPARENCY INDEX: FARM-GATE VS RETAIL MIDDLEMEN BREAKDOWN (PRD SECTION 1.2) */}
+      {/* 8.5. PRICE TRANSPARENCY INDEX: FARM-GATE VS RETAIL MIDDLEMEN BREAKDOWN */}
       <section id="direct-pricing" className="bg-[#FAF8F2] border-t border-[#E5DBC7] py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-bold uppercase tracking-wider text-[#6A9B48]">
-              PRD Requirement 1.2 — Price Transparency Index
+              Direct Price Transparency Index
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-[#0D2E1C] tracking-tight mt-1">
               Farm-Gate vs Retail Middlemen Breakdown
@@ -1526,7 +1521,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 9. FARMER ONBOARDING CALL TO ACTION BANNER (PRD FR-1.1) */}
+      {/* 9. FARMER ONBOARDING CALL TO ACTION BANNER */}
       <section id="sell" className="bg-[#0D2E1C] text-[#FAF8F2] py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -1646,18 +1641,18 @@ export default function Home() {
                 Security & Integrity
               </div>
               <ul className="space-y-2 text-xs text-[#FAF8F2]/70">
-                <li>Paystack Payment Gateway</li>
-                <li>JWT Signed Sessions (7 Days)</li>
-                <li>Bcrypt Password Hashing</li>
-                <li>InnoDB ACID Transactions</li>
-                <li>Row-Level Concurrency Locks</li>
+                <li>Paystack Escrow Protection</li>
+                <li>Encrypted Buyer Sessions</li>
+                <li>Secure Farmer Settlement</li>
+                <li>Direct Bank NIP Payouts</li>
+                <li>Guaranteed Freshness Delivery</li>
               </ul>
             </div>
           </div>
 
           <div className="pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-[#FAF8F2]/60">
             <div>
-              © 2026 Farm2Door. Approved for Implementation.
+              © 2026 Farm2Door. All Rights Reserved.
             </div>
             <div className="flex flex-wrap items-center gap-4">
               <Link

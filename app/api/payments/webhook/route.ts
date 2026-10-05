@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     const rawBody = await request.text();
     const signature = request.headers.get("x-paystack-signature") || "";
 
-    // 2. Cryptographically validate HMAC-SHA512 signature (PRD NFR-2.3)
+    // 2. Cryptographically validate HMAC-SHA512 signature
     const isValidSignature = verifyWebhookSignature(rawBody, signature);
     if (!isValidSignature) {
       return NextResponse.json(

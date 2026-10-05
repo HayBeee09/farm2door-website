@@ -457,7 +457,7 @@ export default function BuyerOrdersPage() {
         )}
       </main>
 
-      {/* Verified Peer Review Submission Modal (PRD Module 5) */}
+      {/* Verified Peer Review Submission Modal */}
       {reviewingItem && (
         <ReviewModal
           isOpen={!!reviewingItem}

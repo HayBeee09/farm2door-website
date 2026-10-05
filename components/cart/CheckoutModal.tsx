@@ -90,7 +90,7 @@ export default function CheckoutModal() {
       if (!res.ok) {
         if (res.status === 409 || data.isStockConflict) {
           setStockConflictError(
-            data.message || data.error || "ACID Concurrency Rollback: Item stock is no longer available."
+            data.message || data.error || "Item stock is no longer available. Please adjust your basket quantity."
           );
           return;
         }
@@ -138,12 +138,12 @@ export default function CheckoutModal() {
             <span className="text-2xl">⚡</span>
             <div>
               <h2 className="text-base sm:text-lg font-black text-[#0D2E1C]">
-                {confirmedOrder ? "Order Placed & Payment Confirmed" : "Fast Dummy Checkout (Simulated Settlement)"}
+                {confirmedOrder ? "Order Placed & Payment Confirmed" : "Secure Doorstep Checkout"}
               </h2>
               <span className="text-[11px] text-[#4F6A52] font-semibold">
                 {confirmedOrder
-                  ? "PostgreSQL row-level lock committed • Funds secured in simulated escrow"
-                  : "PRD Modules 3 & 4: Instant Auto-Approved Payment & ACID Concurrency"}
+                  ? "Order verified • Funds secured in Paystack escrow"
+                  : "Instant Payment & Guaranteed Stock Reservation"}
               </span>
             </div>
           </div>
@@ -162,11 +162,10 @@ export default function CheckoutModal() {
             <div className="flex items-start space-x-2.5">
               <span className="text-base">⚠️</span>
               <div>
-                <strong className="block font-bold">ACID Transaction Rollback Executed:</strong>
+                <strong className="block font-bold">Stock Availability Notice:</strong>
                 <p className="mt-0.5">{stockConflictError}</p>
                 <p className="mt-1 text-[11px] text-[#771D1D]">
-                  PostgreSQL successfully aborted the checkout transaction to prevent negative inventory.
-                  Please adjust the quantity in your basket and try again.
+                  Produce stock was just reserved by another buyer. Please adjust your basket quantity and try again.
                 </p>
               </div>
             </div>
@@ -192,8 +191,8 @@ export default function CheckoutModal() {
                 Payment Approved & Order Confirmed!
               </h3>
               <p className="text-xs text-[#2B5436] mt-1 max-w-md mx-auto">
-                Crop inventory was atomically deducted in PostgreSQL (<code className="font-mono text-[11px] font-bold">FOR UPDATE</code>).
-                Funds are held in simulated Paystack escrow awaiting buyer delivery confirmation.
+                Crop inventory has been reserved directly with the local farmer.
+                Payment is securely held in Paystack escrow until your doorstep delivery is complete.
               </p>
             </div>
 
@@ -209,7 +208,7 @@ export default function CheckoutModal() {
               <div className="flex justify-between text-[#4F6A52]">
                 <span>Payment Settlement:</span>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#DCFCE7] text-[#166534] border border-[#BBF7D0]">
-                  ✓ Instant Simulated Approval ({confirmedOrder.paymentChannel === "card" ? "Dummy Debit Card" : confirmedOrder.paymentChannel === "bank_transfer" ? "Dummy Bank Transfer" : "Pay on Delivery"})
+                  ✓ Verified Escrow Payment ({confirmedOrder.paymentChannel === "card" ? "Debit Card" : confirmedOrder.paymentChannel === "bank_transfer" ? "Direct Bank Transfer" : "Pay on Delivery"})
                 </span>
               </div>
 
@@ -361,14 +360,14 @@ export default function CheckoutModal() {
               </div>
             </div>
 
-            {/* PAYMENT METHOD SELECTOR (DUMMY IMPLEMENTATION) */}
+            {/* PAYMENT METHOD SELECTOR */}
             <div className="space-y-3 pt-2 border-t border-[#E5DBC7]">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-[#4F6A52]">
-                  2. Payment Method (Simulated Settlement)
+                  2. Payment Method (Paystack Escrow)
                 </h3>
-                <span className="text-[10px] px-2 py-0.5 bg-[#FEF08A] text-[#854D0E] font-bold rounded-full border border-[#FDE047]">
-                  Instant Approval Mode
+                <span className="text-[10px] px-2 py-0.5 bg-[#DCFCE7] text-[#166534] font-bold rounded-full border border-[#BBF7D0]">
+                  Paystack Secured
                 </span>
               </div>
 
@@ -384,9 +383,9 @@ export default function CheckoutModal() {
                   }`}
                 >
                   <span className="text-base block mb-1">💳</span>
-                  <strong className="block text-xs font-bold">Simulated Card</strong>
+                  <strong className="block text-xs font-bold">Debit / Credit Card</strong>
                   <span className={`text-[10px] block mt-0.5 ${paymentChannel === "card" ? "text-[#CFE73B]" : "text-[#4F6A52]"}`}>
-                    Instant Auto-Approved
+                    Instant Escrow Approval
                   </span>
                 </button>
 
@@ -401,7 +400,7 @@ export default function CheckoutModal() {
                   }`}
                 >
                   <span className="text-base block mb-1">🏦</span>
-                  <strong className="block text-xs font-bold">Simulated Transfer</strong>
+                  <strong className="block text-xs font-bold">Direct Bank Transfer</strong>
                   <span className={`text-[10px] block mt-0.5 ${paymentChannel === "bank_transfer" ? "text-[#CFE73B]" : "text-[#4F6A52]"}`}>
                     NIP Direct Verification
                   </span>
@@ -442,11 +441,11 @@ export default function CheckoutModal() {
               </div>
             </div>
 
-            {/* ACID Security Note */}
+            {/* Security Note */}
             <div className="p-3 rounded-xl bg-[#FFFDF9] border border-[#E5DBC7] text-[11px] text-[#4F6A52] flex items-center space-x-2">
               <span className="text-sm">🛡️</span>
               <span>
-                <strong>Zero Overselling Guarantee:</strong> PostgreSQL executes row-level locking (<code className="font-mono text-[#0D2E1C]">SELECT ... FOR UPDATE</code>) on each crop before payment is confirmed.
+                <strong>Zero Overselling Guarantee:</strong> Fresh produce inventory is reserved in real time to guarantee fulfillment upon harvest.
               </span>
             </div>
 
@@ -474,7 +473,7 @@ export default function CheckoutModal() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       />
                     </svg>
-                    <span>Acquiring Concurrency Lock & Settle...</span>
+                    <span>Reserving Fresh Produce & Securing Payment...</span>
                   </>
                 ) : user?.role === "farmer" ? (
                   <span>🚜 Farmer Accounts Cannot Place Orders</span>

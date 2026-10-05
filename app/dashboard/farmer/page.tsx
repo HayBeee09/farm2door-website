@@ -210,7 +210,7 @@ export default function FarmerDashboardPage() {
   // Quick Inline Stock Adjustment (+1 / -1)
   const handleQuickStockAdjust = async (product: FarmerProduct, delta: number) => {
     const newStock = Math.max(0, product.stock + delta);
-    // PRD FR-2.3: Zero stock automatically toggles is_available to false
+    // Zero stock automatically toggles is_available to false
     const newAvailability = newStock > 0 ? product.isAvailable : false;
 
     // Optimistic UI update
@@ -558,7 +558,7 @@ export default function FarmerDashboardPage() {
                 <span>•</span>
                 <span>{currentFarmerInfo.location}</span>
                 <span>•</span>
-                <span className="text-[#6A9B48]">PRD Stage 4 Active</span>
+                <span className="text-[#6A9B48]">Active Producer</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-[#0D2E1C] tracking-tight">
                 {currentFarmerInfo.farmName}
@@ -797,7 +797,7 @@ export default function FarmerDashboardPage() {
                           </span>
                         </div>
 
-                        {/* Quick Stock Stepper (PRD FR-2.3) */}
+                        {/* Quick Stock Stepper */}
                         <div className="bg-[#FAF8F2] border border-[#E5DBC7] rounded-xl p-1.5 flex items-center space-x-2">
                           <button
                             type="button"
@@ -1016,7 +1016,7 @@ export default function FarmerDashboardPage() {
           <div className="bg-white rounded-2xl border border-[#E5DBC7] p-6 sm:p-8 max-w-2xl shadow-xs">
             <h3 className="text-lg font-bold text-[#0D2E1C] mb-1">Farm Enterprise Credentials</h3>
             <p className="text-xs text-[#4F6A52] mb-6">
-              Verified Ekiti smallholder record. Registered in accordance with PRD Section 2.
+              Verified Ekiti smallholder record. Certified agricultural producer.
             </p>
 
             <div className="space-y-4">
@@ -1056,7 +1056,7 @@ export default function FarmerDashboardPage() {
                       Direct Settlement Bank Account
                     </label>
                     <span className="text-[11px] text-[#506155]">
-                      Automated 92% farm-gate escrow clearance destination (PRD Section 2)
+                      Automated 92% farm-gate escrow clearance destination
                     </span>
                   </div>
                   <button
@@ -1229,7 +1229,7 @@ export default function FarmerDashboardPage() {
                   Update Settlement Bank Account
                 </h3>
                 <p className="text-xs text-[#506155]">
-                  Direct farm-gate payout clearance destination (PRD Section 2)
+                  Direct farm-gate payout clearance destination
                 </p>
               </div>
               <button

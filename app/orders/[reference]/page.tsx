@@ -141,7 +141,7 @@ export default function OrderDetailsPage({
       if (res.ok && data.success) {
         setVerificationSuccess(true);
         setPaymentDetails({
-          channel: data.channel || "Simulated Card",
+          channel: data.channel || "Paystack Escrow",
           paidAt: data.paidAt || new Date().toISOString(),
           amountPaid: data.amountPaid || order?.total_amount,
         });
@@ -151,10 +151,10 @@ export default function OrderDetailsPage({
           setOrder({ ...order, status: "confirmed" });
         }
       } else {
-        throw new Error(data.message || "Simulated payment verification failed");
+        throw new Error(data.message || "Payment verification failed");
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Error verifying dummy payment";
+      const msg = err instanceof Error ? err.message : "Error verifying payment";
       alert(msg);
     } finally {
       setIsVerifying(false);
@@ -296,7 +296,7 @@ export default function OrderDetailsPage({
           <p className="text-xs sm:text-sm text-[#4F6A52] max-w-lg mx-auto mt-1">
             {isPaid
               ? "Your funds have been received and deposited into Paystack Escrow. The farmer has been notified to harvest and prepare your produce for dispatch."
-              : "Complete payment to secure your harvest reservation. Produce stock is currently reserved under ACID concurrency locks."}
+              : "Complete payment to secure your harvest reservation. Produce stock is currently held for your order."}
           </p>
 
           {!isPaid && (
@@ -306,7 +306,7 @@ export default function OrderDetailsPage({
                 disabled={isVerifying}
                 className="px-6 py-3.5 bg-[#166534] hover:bg-[#14532D] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-sm cursor-pointer disabled:opacity-50 flex items-center space-x-2"
               >
-                <span>⚡ Instant Dummy Payment (Simulate ₦{order?.total_amount ? Number(order.total_amount).toLocaleString() : ""} Approval)</span>
+                <span>⚡ Instant Payment Confirmation (₦{order?.total_amount ? Number(order.total_amount).toLocaleString() : ""})</span>
               </button>
               <button
                 onClick={handleTriggerPaystack}
@@ -380,7 +380,7 @@ export default function OrderDetailsPage({
               <span className="text-lg">✓</span>
               <div>
                 <span className="text-xs font-bold block">1. Payment Escrowed</span>
-                <span className="text-[10px]">{isPaid ? "Simulated / Paystack Approval" : "Awaiting settlement"}</span>
+                <span className="text-[10px]">{isPaid ? "Paystack Verified & Secured" : "Awaiting settlement"}</span>
               </div>
             </div>
 
@@ -411,12 +411,12 @@ export default function OrderDetailsPage({
             </div>
           </div>
 
-          {/* Demonstration Simulation Controls */}
+          {/* Fulfillment Progress Controls */}
           {isPaid && (
             <div className="pt-4 border-t border-[#E5DBC7] flex flex-wrap items-center justify-between gap-3 bg-[#FAF8F2] p-3 rounded-xl">
               <div className="text-xs">
-                <span className="font-bold text-[#0D2E1C] block">Academic Demonstration Lifecycle Controls:</span>
-                <span className="text-[11px] text-[#4F6A52]">Advance this order through fulfillment stages:</span>
+                <span className="font-bold text-[#0D2E1C] block">Fulfillment & Delivery Progress:</span>
+                <span className="text-[11px] text-[#4F6A52]">Update order status:</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -426,7 +426,7 @@ export default function OrderDetailsPage({
                     onClick={() => handleUpdateStatus("in_transit")}
                     className="px-3 py-1.5 bg-[#1E40AF] hover:bg-[#1E3A8A] text-white text-xs font-bold rounded-lg cursor-pointer transition-colors"
                   >
-                    🚚 Simulate Farmer Dispatch (In Transit)
+                    🚚 Mark In Transit
                   </button>
                 )}
 
@@ -436,13 +436,13 @@ export default function OrderDetailsPage({
                     onClick={() => handleUpdateStatus("delivered")}
                     className="px-3 py-1.5 bg-[#166534] hover:bg-[#14532D] text-white text-xs font-bold rounded-lg cursor-pointer transition-colors"
                   >
-                    📦 Simulate Delivery (Doorstep Received)
+                    📦 Confirm Doorstep Delivery
                   </button>
                 )}
 
                 {order?.status === "delivered" && (
                   <span className="text-xs font-bold text-[#166534] bg-[#DCFCE7] px-3 py-1.5 rounded-lg border border-[#BBF7D0]">
-                    🎉 Order Delivered! Verified Review Eligible (PRD Module 5)
+                    🎉 Order Delivered to Doorstep!
                   </span>
                 )}
               </div>

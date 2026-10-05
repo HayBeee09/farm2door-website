@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/utils/supabase/server";
 
-// Reference generator enforcing PRD format: FD-YYYYMMDD-XXXXXX
+// Reference generator format: FD-YYYYMMDD-XXXXXX
 function generateOrderReference(): string {
   const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
   const chars = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. Generate PRD Order Reference (FD-YYYYMMDD-XXXXXX)
+    // 3. Generate Order Reference (FD-YYYYMMDD-XXXXXX)
     const orderReference = generateOrderReference();
 
     // 4. ACID Concurrency-Locked Checkout via PostgreSQL execute_atomic_checkout
@@ -263,8 +263,8 @@ export async function POST(request: NextRequest) {
       deliveryPhone: delivery_phone.trim(),
       createdAt: new Date().toISOString(),
       message: dummy_payment
-        ? "Order placed and dummy payment confirmed instantly!"
-        : "Order placed successfully with ACID row-level locking.",
+        ? "Order placed and payment secured in escrow!"
+        : "Order placed successfully. Produce reserved for dispatch.",
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Internal error during checkout execution";

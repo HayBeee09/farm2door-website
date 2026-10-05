@@ -188,7 +188,7 @@ export default function NewProduceListingPage() {
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <div className="mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EBF3E8] border border-[#CDE1C8] text-[#1B3B22] text-xs font-bold mb-2">
-            <span>🌾 PRD Module 2: Rapid Mobile Harvest Publishing</span>
+            <span>🌾 Direct Harvest Publishing</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-[#0D2E1C] tracking-tight">
             Publish New Harvest to Marketplace
@@ -225,10 +225,10 @@ export default function NewProduceListingPage() {
               />
             </div>
 
-            {/* 2. Category Selection (PRD 6 Categories) */}
+            {/* 2. Category Selection */}
             <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#E5DBC7] shadow-xs">
               <label className="block text-xs font-bold uppercase tracking-wider text-[#0D2E1C] mb-2">
-                2. Agricultural Category (PRD FR-2.1) <span className="text-red-500">*</span>
+                2. Agricultural Category <span className="text-red-500">*</span>
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                 {CATEGORIES.map((cat) => {
@@ -255,10 +255,10 @@ export default function NewProduceListingPage() {
               </div>
             </div>
 
-            {/* 3. Packaging Unit (5 PRD Units) */}
+            {/* 3. Packaging Unit */}
             <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#E5DBC7] shadow-xs">
               <label className="block text-xs font-bold uppercase tracking-wider text-[#0D2E1C] mb-2">
-                3. Harvest Packaging Unit (PRD FR-2.2) <span className="text-red-500">*</span>
+                3. Harvest Packaging Unit <span className="text-red-500">*</span>
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                 {PACKAGING_UNITS.map((u) => {
@@ -330,7 +330,7 @@ export default function NewProduceListingPage() {
                     required
                   />
                   <p className="text-[10px] text-[#4F6A52] mt-1">
-                    * If stock is set to 0, listing automatically deactivates (PRD FR-2.3).
+                    * If stock reaches 0, listing automatically pauses until you harvest more.
                   </p>
                 </div>
               </div>

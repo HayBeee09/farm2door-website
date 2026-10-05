@@ -1,6 +1,5 @@
 /**
  * Farm2Door — Trust & Reputation System (Verified Reviews Store)
- * PRD Requirement: Section 4.5 (Module 5), FR-5.1 & FR-5.2
  * Enforces delivered-order eligibility, arithmetic mean calculations,
  * and persistent storage across Supabase and local cache.
  */
@@ -249,8 +248,8 @@ export function getReviewsForFarmer(farmerId: string): {
 }
 
 /**
- * PRD FR-5.1: Eligibility Verification Guard
- * Strictly verifies that a buyer has a completed, DELIVERED order containing this crop
+ * Eligibility Verification Guard
+ * Verifies that a buyer has a completed, DELIVERED order containing this crop
  * and has not already reviewed this order line item.
  */
 export function checkReviewEligibility(params: {
@@ -307,13 +306,13 @@ export function checkReviewEligibility(params: {
     if (nonDeliveredOrder) {
       return {
         eligible: false,
-        reason: `Fraud Prevention Intercept: Order ${nonDeliveredOrder.orderReference} is currently "${nonDeliveredOrder.status}". Reviews can only be accepted once the produce has been delivered to your doorstep.`,
+        reason: `Order ${nonDeliveredOrder.orderReference} is currently "${nonDeliveredOrder.status}". Reviews can be submitted once your harvest has been delivered to your doorstep.`,
       };
     }
 
     return {
       eligible: false,
-      reason: "Fraud Prevention Intercept: No delivered order found for this produce. The review submission endpoint requires an order with status 'delivered' for that specific produce before accepting ratings.",
+      reason: "Reviews can be submitted once your produce delivery is completed.",
     };
   }
 

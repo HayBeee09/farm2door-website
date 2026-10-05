@@ -183,16 +183,15 @@ export async function POST(request: NextRequest) {
     if (userRole === "farmer") {
       return NextResponse.json(
         {
-          error: "Fraud Prevention Intercept: Farmer accounts are not permitted to submit buyer reviews on produce listings.",
+          error: "Farmer accounts manage farm listings and cannot submit consumer reviews.",
           isEligible: false,
         },
         { status: 403 }
       );
     }
 
-    // 3. DATABASE VERIFICATION QUERY (Anti-Fraud Module)
-    // The endpoint queries the database to verify that the requesting buyer
-    // has an order with status 'delivered' for that specific produce
+    // 3. DATABASE VERIFICATION QUERY
+    // Verify that the buyer has an order with status 'delivered' for that specific produce
     let isDeliveredVerified = false;
     let verifiedOrderId: string | undefined = undefined;
     let verifiedOrderRef: string | undefined = order_reference;
@@ -245,7 +244,7 @@ export async function POST(request: NextRequest) {
         if (existingRev) {
           return NextResponse.json(
             {
-              error: `You have already submitted a verified review for this harvest under order ${verifiedOrderRef}.`,
+              error: `You have already submitted a review for this harvest under order ${verifiedOrderRef}.`,
               alreadyReviewed: true,
               isEligible: false,
             },
@@ -257,7 +256,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 4. Store Fallback Verification (for offline/demo and simulated checkout orders)
+    // 4. Store Fallback Verification (for offline and fast checkout orders)
     if (!isDeliveredVerified) {
       const eligibility = checkReviewEligibility({
         productId: product_id,
@@ -274,7 +273,7 @@ export async function POST(request: NextRequest) {
       } else if (eligibility.alreadyReviewed) {
         return NextResponse.json(
           {
-            error: eligibility.reason || "You have already submitted a verified review for this harvest.",
+            error: eligibility.reason || "You have already submitted a review for this harvest.",
             isEligible: false,
             alreadyReviewed: true,
           },
@@ -285,7 +284,7 @@ export async function POST(request: NextRequest) {
         if (nonDeliveredOrderRef) {
           return NextResponse.json(
             {
-              error: `Fraud Prevention Intercept: Order ${nonDeliveredOrderRef} is currently in '${nonDeliveredStatus}' status. The database verified that this produce has not been marked 'delivered' to your doorstep yet. Reviews are only accepted post-delivery.`,
+              error: `Order ${nonDeliveredOrderRef} is currently in '${nonDeliveredStatus}' status. Reviews can be submitted once this produce has been delivered to your doorstep.`,
               isEligible: false,
             },
             { status: 403 }
@@ -294,7 +293,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(
           {
-            error: eligibility.reason || "Fraud Prevention Intercept: The review submission endpoint queried the database and verified that you do not have an order with status 'delivered' for this specific produce. Unverified ratings are strictly eliminated.",
+            error: eligibility.reason || "Reviews can be submitted once your produce delivery has been completed.",
             isEligible: false,
             alreadyReviewed: false,
           },
@@ -362,7 +361,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: "Verified review submitted successfully. Rating has been verified against delivered purchase in database.",
+        message: "Review submitted successfully. Thank you for your feedback!",
         review: newReview,
       },
       { status: 201 }

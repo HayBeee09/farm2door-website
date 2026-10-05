@@ -192,13 +192,13 @@ export default function CartDrawer() {
                 onClick={handleProceedToCheckout}
                 className="w-full py-3.5 bg-[#0D2E1C] hover:bg-[#1B3B22] text-[#CFE73B] text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer"
               >
-                <span>Proceed to Concurrency-Safe Checkout &rarr;</span>
+                <span>Proceed to Secure Checkout &rarr;</span>
               </button>
 
               <div className="flex items-center justify-center space-x-2 text-[10px] text-[#4F6A52] text-center pt-1">
                 <span>🔒 Paystack Escrow Protected</span>
                 <span>•</span>
-                <span>ACID Concurrency Locking</span>
+                <span>Direct Farm Freshness</span>
               </div>
             </div>
           )}

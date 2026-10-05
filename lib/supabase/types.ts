@@ -1,6 +1,5 @@
 /**
- * Farm2Door — Supabase Database Types Definition
- * PRD References: Section 4, Section 6 (Data Persistence Layer)
+ * Farm2Door Database Schema & Types
  * System Architecture: Farm2Door Engineering Team
  */
 

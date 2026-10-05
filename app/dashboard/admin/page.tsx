@@ -516,7 +516,7 @@ export default function AdminDashboardPage() {
         {/* --- TAB 1: OVERVIEW & SYSTEM TELEMETRY --- */}
         {activeTab === "overview" && (
           <div className="space-y-8">
-            {/* PRD Disintermediation Surplus Grid */}
+            {/* Disintermediation Surplus Grid */}
             <div className="bg-[#FFFDF9] border border-[#E5DBC7] rounded-3xl p-6 sm:p-8 shadow-xs">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E5DBC7] pb-4 mb-6">
                 <div>
@@ -526,7 +526,7 @@ export default function AdminDashboardPage() {
                   <h3 className="text-xl font-bold text-[#0D2E1C]">Ekiti Supply Chain Efficiency Breakdown</h3>
                 </div>
                 <span className="text-xs font-bold text-[#0D2E1C] bg-[#FAF8F2] px-3 py-1 rounded-full border border-[#E5DBC7]">
-                  PRD Section 1.2 Benchmark
+                  Market Benchmark
                 </span>
               </div>
 
@@ -621,13 +621,13 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* --- TAB 2: FARMER CREDENTIAL AUDITING (PRD 8.2) --- */}
+        {/* --- TAB 2: FARMER CREDENTIAL AUDITING --- */}
         {activeTab === "farmers" && (
           <div className="bg-[#FFFDF9] border border-[#E5DBC7] rounded-3xl p-6 sm:p-8 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
                 <span className="text-xs font-mono font-bold text-[#6A9B48] uppercase">
-                  PRD FR-1.4 & Section 2 (Farmer Persona)
+                  Smallholder Verification Desk
                 </span>
                 <h3 className="text-xl font-bold text-[#0D2E1C]">Ekiti Smallholder Physical Auditing</h3>
                 <p className="text-xs text-[#506155] mt-0.5">
@@ -719,13 +719,13 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* --- TAB 3: ESCROW & PAYMENT SETTLEMENT AUDIT (PRD 8.3) --- */}
+        {/* --- TAB 3: ESCROW & PAYMENT SETTLEMENT AUDIT --- */}
         {activeTab === "escrow" && (
           <div className="bg-[#FFFDF9] border border-[#E5DBC7] rounded-3xl p-6 sm:p-8 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
                 <span className="text-xs font-mono font-bold text-[#6A9B48] uppercase">
-                  PRD Module 4 & FR-4.3: Financial Ledger & Escrow Reconciliation
+                  Financial Ledger & Escrow Settlement
                 </span>
                 <h3 className="text-xl font-bold text-[#0D2E1C]">Paystack & Instant Settlement Auditing</h3>
                 <p className="text-xs text-[#506155] mt-0.5">
@@ -901,13 +901,13 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* --- TAB 5: DISPUTE RESOLUTION WORKFLOW (PRD 8.4) --- */}
+        {/* --- TAB 5: DISPUTE RESOLUTION WORKFLOW --- */}
         {activeTab === "disputes" && (
           <div className="bg-[#FFFDF9] border border-[#E5DBC7] rounded-3xl p-6 sm:p-8 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
                 <span className="text-xs font-mono font-bold text-[#6A9B48] uppercase">
-                  PRD Section 3.1 & 8.4: Quality & Dispute Resolution
+                  Quality & Dispute Resolution Desk
                 </span>
                 <h3 className="text-xl font-bold text-[#0D2E1C]">Transit Delays & Produce Quality Claims</h3>
                 <p className="text-xs text-[#506155] mt-0.5">

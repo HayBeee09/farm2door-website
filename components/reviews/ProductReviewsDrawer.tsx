@@ -116,9 +116,9 @@ export default function ProductReviewsDrawer({
           <div className="flex items-center space-x-2.5">
             <span className="text-xl">⭐</span>
             <div>
-              <h2 className="text-base font-black text-[#0D2E1C]">Verified Harvest Reviews</h2>
+              <h2 className="text-base font-black text-[#0D2E1C]">Harvest Reviews & Ratings</h2>
               <span className="text-[11px] text-[#4F6A52] font-semibold">
-                PRD Module 5: Customer Ratings & Feedback
+                Customer Ratings & Feedback
               </span>
             </div>
           </div>
@@ -156,42 +156,34 @@ export default function ProductReviewsDrawer({
           </div>
         )}
 
-        {/* Anti-Fraud Verification Badge & Review Action */}
-        <div className="p-4 bg-white border-b border-[#E5DBC7] space-y-2 shrink-0">
-          <div className="flex items-start gap-2.5 text-xs">
-            <span className="text-base shrink-0">🛡️</span>
+        {/* Verified Order Rating Trigger */}
+        {eligibility?.eligible && (
+          <div className="p-4 bg-[#EBF3E8] border-b border-[#CDE1C8] flex items-center justify-between gap-3 shrink-0">
             <div>
-              <strong className="text-[#0D2E1C] block font-bold text-xs">
-                Verified Peer Review Anti-Fraud Guard
-              </strong>
-              <p className="text-[11px] text-[#4F6A52] leading-tight mt-0.5">
-                The database verifies that the buyer has an order with status &lsquo;delivered&rsquo; for this specific produce before accepting 1-to-5 star ratings and reviews.
+              <span className="text-xs font-bold text-[#166534] block">
+                Delivered to Your Doorstep
+              </span>
+              <p className="text-[11px] text-[#2B5436]">
+                Share your rating and thoughts on this harvest.
               </p>
             </div>
+            <button
+              type="button"
+              onClick={() => setIsReviewModalOpen(true)}
+              className="px-4 py-2 bg-[#166534] hover:bg-[#14532D] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm whitespace-nowrap"
+            >
+              <span>⭐</span>
+              <span>Rate Harvest</span>
+            </button>
           </div>
+        )}
 
-          {eligibility?.eligible && (
-            <div className="mt-2 pt-2 border-t border-[#E5DBC7] flex items-center justify-between gap-2">
-              <span className="text-[11px] font-bold text-[#166534]">
-                ✓ Delivered Order on Record ({eligibility.orderReference})
-              </span>
-              <button
-                type="button"
-                onClick={() => setIsReviewModalOpen(true)}
-                className="px-3 py-1.5 bg-[#166534] hover:bg-[#14532D] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer flex items-center gap-1 shadow-2xs whitespace-nowrap"
-              >
-                <span>⭐</span>
-                <span>Rate Harvest</span>
-              </button>
-            </div>
-          )}
-
-          {eligibility?.alreadyReviewed && (
-            <div className="mt-2 pt-2 border-t border-[#E5DBC7] text-[11px] font-semibold text-[#166534] bg-[#DCFCE7] px-3 py-1.5 rounded-xl border border-[#BBF7D0]">
-              ✓ You have submitted a verified review for this produce ({eligibility.orderReference})
-            </div>
-          )}
-        </div>
+        {eligibility?.alreadyReviewed && (
+          <div className="p-3 bg-[#FAF8F2] border-b border-[#E5DBC7] flex items-center gap-2 text-xs text-[#166534] font-semibold shrink-0">
+            <span>✓</span>
+            <span>You have reviewed this delivered harvest ({eligibility.orderReference}).</span>
+          </div>
+        )}
 
         {/* Reviews List & Distribution (Scrollable) */}
         <div className="flex-1 overflow-y-auto p-5 space-y-6">

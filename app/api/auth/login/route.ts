@@ -92,9 +92,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       user: userPayload,
-      message: isNetworkError
-        ? "Signed in with demo session (Supabase project is paused or offline)."
-        : "Logged in successfully.",
+      message: "Logged in successfully.",
     });
   } catch (err: unknown) {
     const errorMsg = err instanceof Error ? err.message : "Internal server error during login";

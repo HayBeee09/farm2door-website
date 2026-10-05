@@ -107,7 +107,7 @@ export default function ReviewModal({
                 Rate & Review Harvest
               </h2>
               <span className="text-[11px] text-[#4F6A52] font-semibold">
-                PRD Module 5: Verified Buyer Quality Feedback
+                Share your harvest experience
               </span>
             </div>
           </div>
@@ -123,9 +123,9 @@ export default function ReviewModal({
         {isSuccess ? (
           <div className="p-6 text-center space-y-3 bg-[#EBF3E8] border border-[#CDE1C8] rounded-2xl animate-fade-in">
             <span className="text-4xl block">🎉</span>
-            <h3 className="text-base font-black text-[#166534]">Verified Review Published!</h3>
+            <h3 className="text-base font-black text-[#166534]">Review Published!</h3>
             <p className="text-xs text-[#2B5436] max-w-sm mx-auto">
-              Thank you for supporting Ekiti smallholder agriculture. Your rating has been added to the public reputation score for <strong>{productName}</strong>.
+              Thank you for supporting Ekiti agriculture. Your review has been added for <strong>{productName}</strong>.
             </p>
           </div>
         ) : (

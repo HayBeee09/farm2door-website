@@ -76,7 +76,7 @@ export async function PATCH(
       }
     }
 
-    // PRD FR-2.3: Automatic zero-stock deactivation
+    // Automatic zero-stock deactivation
     if (stock_quantity !== undefined) {
       const stock = parseInt(stock_quantity, 10);
       if (!isNaN(stock) && stock >= 0) {

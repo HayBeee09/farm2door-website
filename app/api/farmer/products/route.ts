@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
     const categoryIdNum = parseInt(category_id, 10);
     if (isNaN(categoryIdNum) || categoryIdNum < 1 || categoryIdNum > 6) {
       return NextResponse.json(
-        { error: "Category ID must be between 1 and 6 (PRD Categories)" },
+        { error: "Category ID must be between 1 and 6" },
         { status: 400 }
       );
     }
@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // PRD FR-2.3: Automatic zero-stock deactivation
+    // Automatic zero-stock deactivation
     const isAvailable = stockNum > 0;
 
     const defaultImage = "/images/produce/yam-tubers.jpg";

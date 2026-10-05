@@ -1,6 +1,6 @@
 // lib/admin-store.ts
 // Administrative state management and audit store for Farm2Door
-// Adheres strictly to PRD Section 2 (Admin Persona) & Section 3.1 (Platform Administration & Escrow Auditing)
+// Platform Administration & Escrow Auditing
 
 import fs from "fs";
 import path from "path";
@@ -325,7 +325,7 @@ export function getAdminMetrics() {
     }
   }
 
-  // PRD Requirement: Spoilage reduction metrics
+  // Spoilage reduction metrics
   // Traditional brokers have 40% post-harvest loss; Farm2Door direct turnover reduces it to ~3.2%
   const estimatedKgSold = Math.round(gmvNgn / 650); // average ~₦650/kg produce equivalent
   const kgSavedFromRot = Math.round(estimatedKgSold * 0.368); // 40% - 3.2% = 36.8% saved
